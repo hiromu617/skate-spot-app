@@ -8,23 +8,23 @@ import {
   Stack,
   Collapse,
   Link,
+  Square,
   useColorModeValue,
+  useColorMode,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
+import { SunIcon, MoonIcon} from '@chakra-ui/icons'
+import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <Box>
       <Flex
-        // bg={useColorModeValue("white", "gray.800")}
-        bg="white"
+        bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
         minH={"60px"}
         py={{ base: 2 }}
@@ -69,6 +69,9 @@ export default function NavBar() {
           direction={"row"}
           spacing={6}
         >
+          <Square>
+            {colorMode === "light" ? <SunIcon onClick={toggleColorMode}/>: <MoonIcon onClick={toggleColorMode}/>}
+          </Square>
           <Button
             as={"a"}
             fontSize={"sm"}
@@ -172,7 +175,8 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: "Inspiration",
+    label: "新しいスポットを投稿する",
+    href: "/new",
   },
   {
     label: "Find Work",
