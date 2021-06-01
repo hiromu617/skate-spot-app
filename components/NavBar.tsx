@@ -55,7 +55,9 @@ export default function NavBar() {
             color={useColorModeValue("gray.800", "white")}
             size="md"
           >
+            <Link href="/">
             SkateSpot.com
+            </Link>
           </Heading>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -176,7 +178,7 @@ interface NavItem {
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "新しいスポットを投稿する",
-    href: "/new",
+    href: "/spot/new",
   },
   {
     label: "Find Work",
