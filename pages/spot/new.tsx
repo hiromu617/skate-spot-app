@@ -25,7 +25,7 @@ function New() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const onSubmit = handleSubmit(data => alert(data));
+  const onSubmit = handleSubmit(data => alert(data.name));
 
   return (
     <div>

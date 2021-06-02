@@ -3,9 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
-export async function getServerSideProps() {
+export const getServerSideProps = async() =>  {
   const res = await fetch("https://skate-spot-app.herokuapp.com/api/spots/");
-  const spots = await res.json();
+  const spots: Spot[] = await res.json();
   return {
     props: {
       spots,
@@ -13,7 +13,16 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Home({ spots }) {
+
+type Props = {
+  spots: Spot[]
+}
+type Spot = {
+  name: string,
+  id: number
+}
+
+const Home: React.FC<Props> = ({ spots }) => {
   console.log(spots);
   return (
     <div>
@@ -27,7 +36,7 @@ export default function Home({ spots }) {
         <Center>
           <Stack p={8}>
             <Heading>SkateSpot.com</Heading>
-            {spots.map((spot: { name: string; id: number }) => {
+            {spots.map((spot) => {
               return (
                 <Box boxShadow={"xl"} rounded={"md"} p={5}>
                   <Heading size="md">{spot.name}</Heading>
@@ -40,3 +49,4 @@ export default function Home({ spots }) {
     </div>
   );
 }
+export default Home;
