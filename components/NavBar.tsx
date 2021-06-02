@@ -14,12 +14,12 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon} from '@chakra-ui/icons'
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
-  const { colorMode, toggleColorMode } = useColorMode()
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <Box>
@@ -55,9 +55,7 @@ export default function NavBar() {
             color={useColorModeValue("gray.800", "white")}
             size="md"
           >
-            <Link href="/">
-            SkateSpot.com
-            </Link>
+            <Link href="/">SkateSpot.com</Link>
           </Heading>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -72,9 +70,13 @@ export default function NavBar() {
           spacing={6}
         >
           <Square>
-            {colorMode === "light" ? <SunIcon onClick={toggleColorMode}/>: <MoonIcon onClick={toggleColorMode}/>}
+            {colorMode === "light" ? (
+              <SunIcon onClick={toggleColorMode} />
+            ) : (
+              <MoonIcon onClick={toggleColorMode} />
+            )}
           </Square>
-          <Button
+          {/* <Button
             as={"a"}
             fontSize={"sm"}
             fontWeight={400}
@@ -82,7 +84,7 @@ export default function NavBar() {
             href={"#"}
           >
             Sign In
-          </Button>
+          </Button> */}
           <Button
             display={{ base: "none", md: "inline-flex" }}
             fontSize={"sm"}
@@ -94,7 +96,7 @@ export default function NavBar() {
               bg: "pink.300",
             }}
           >
-            Sign Up
+            Log In
           </Button>
         </Stack>
       </Flex>
@@ -148,7 +150,11 @@ const MobileNavItem = ({ label, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Stack spacing={4} onClick={onToggle} bg="white">
+    <Stack
+      spacing={4}
+      onClick={onToggle}
+      bg={useColorModeValue("white", "gray.800")}
+    >
       <Flex
         py={2}
         as={Link}
@@ -181,14 +187,14 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/spot/new",
   },
   {
-    label: "Find Work",
+    label: "マイページ",
   },
   {
-    label: "Learn Design",
+    label: "利用規約",
     href: "#",
   },
   {
-    label: "Hire Designers",
+    label: "お問い合わせ",
     href: "#",
   },
 ];
