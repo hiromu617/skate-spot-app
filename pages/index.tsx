@@ -2,10 +2,11 @@ import { Heading, Stack, Center, Box, Text } from "@chakra-ui/layout";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import axios from '../constants/axios'
 
 export const getServerSideProps = async() =>  {
-  const res = await fetch("https://skate-spot-app.herokuapp.com/api/spots/");
-  const spots: Spot[] = await res.json();
+  const res = await axios.get("/api/spots/");
+  const spots = res.data;
   return {
     props: {
       spots,
