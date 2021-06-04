@@ -44,7 +44,7 @@ function New() {
       <Center p={5}>
         <div>
           <Heading pb={10} color={useColorModeValue("gray.900", "white")}>
-            新しいスポットを投稿する
+            新しいスポットを投稿
           </Heading>
           <Stack spacing={5}>
             <Heading size="md" color={useColorModeValue("gray.900", "white")}>

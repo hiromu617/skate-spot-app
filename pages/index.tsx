@@ -36,7 +36,7 @@ const Home: React.FC<Props> = ({ spots }) => {
       <main>
         <Center>
           <Stack p={8}>
-            <Heading>SkateSpot.com</Heading>
+            <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
               return (
                 <Box boxShadow={"xl"} rounded={"md"} p={5}>
