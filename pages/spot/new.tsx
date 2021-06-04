@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
+import axios from "../../constants/axios";
 
 type FormData = {
   name: string;
@@ -25,7 +26,13 @@ function New() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const onSubmit = handleSubmit(data => alert(data.name));
+  const onSubmit = handleSubmit((data) => {
+    axios.post("/api/spots/", {
+      spot: {
+        name: data.name,
+      },
+    });
+  });
 
   return (
     <div>
@@ -44,7 +51,7 @@ function New() {
               スポット情報
             </Heading>
             <form onSubmit={onSubmit}>
-              <FormControl isInvalid={!!(errors.name)}>
+              <FormControl isInvalid={!!errors.name}>
                 <FormLabel htmlFor="name">スポット名</FormLabel>
                 <Input
                   id="name"
@@ -63,7 +70,7 @@ function New() {
               </FormControl>
               <Button
                 mt={4}
-                bg="purple.600" 
+                bg="purple.600"
                 color={"white"}
                 isLoading={isSubmitting}
                 type="submit"
