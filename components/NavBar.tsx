@@ -93,7 +93,7 @@ export default function NavBar() {
             bg={"purple.600"}
             href={"#"}
             _hover={{
-              bg: "pink.300",
+              bg: "purple.400",
             }}
           >
             Log In

@@ -10,28 +10,43 @@ import {
   Stack,
   Button,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
 import axios from "../../constants/axios";
+import {useState} from 'react'
 
 type FormData = {
   name: string;
 };
 
 function New() {
+  const [loading, setLoading] = useState<boolean>(false)
+  const toast = useToast()
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const onSubmit = handleSubmit((data) => {
-    axios.post("/api/spots/", {
+  const onSubmit = handleSubmit(async (data) => {
+    setLoading(true)
+    await axios.post("/api/spots/", {
       spot: {
         name: data.name,
       },
-    });
+    })
+    .then(() => {
+      setLoading(false)
+      toast({
+        title: "スポットを投稿しました",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      })
+    })
   });
 
   return (
@@ -72,8 +87,12 @@ function New() {
                 mt={4}
                 bg="purple.600"
                 color={"white"}
-                isLoading={isSubmitting}
+                isLoading={loading}
                 type="submit"
+                loadingText="Submitting"
+                _hover={{
+                  bg: "purple.400",
+                }}
               >
                 投稿
               </Button>
