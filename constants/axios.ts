@@ -1,6 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  // baseURL: "http://localhost:8000" 
-  baseURL: "https://skate-spot-app.herokuapp.com" 
+  baseURL:  process.env.NEXT_PUBLIC_BASE_URL
 })
