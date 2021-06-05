@@ -3,11 +3,10 @@ import { FC, createContext, useEffect, useState } from 'react';
 
 import firebase from '../../constants/firebase';
 
-type AuthContextProps = {
+const AuthContext = createContext({} as{
   currentUser: User | null | undefined
-}
-
-const AuthContext = createContext<AuthContextProps>({ currentUser: undefined });
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>
+});
 
 const AuthProvider: FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(
@@ -18,12 +17,14 @@ const AuthProvider: FC = ({ children }) => {
     // ログイン状態が変化するとfirebaseのauthメソッドを呼び出す
     firebase.auth().onAuthStateChanged((user) => {
       setCurrentUser(user);
+      console.log(user?.uid)
+      console.log(user?.displayName)
     })
   }, []);
 
   /* 下階層のコンポーネントをラップする */
   return (
-    <AuthContext.Provider value={{ currentUser: currentUser }}>
+    <AuthContext.Provider value={{ currentUser: currentUser,  setCurrentUser:  setCurrentUser}}>
       {children}
     </AuthContext.Provider>
   )

@@ -13,9 +13,14 @@ import {
   useColorMode,
   useBreakpointValue,
   useDisclosure,
+  useToast,
+  Avatar,
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { AuthContext } from "../context/Auth";
+import { useContext } from "react";
+import firebase from "firebase";
 
 type Props = {
   onOpenLoginModal: () => void;
@@ -24,6 +29,7 @@ type Props = {
 const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+  const { currentUser} = useContext(AuthContext);
 
   return (
     <Box>
@@ -71,7 +77,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
           direction={"row"}
-          spacing={6}
+          spacing={4}
         >
           <Square>
             {colorMode === "light" ? (
@@ -80,52 +86,77 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
               <MoonIcon onClick={toggleColorMode} />
             )}
           </Square>
-          <Button
-            display={{ base: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"purple.600"}
-            onClick={onOpenLoginModal}
-            _hover={{
-              bg: "purple.400",
-            }}
-          >
-            Log In
-          </Button>
+          {currentUser ? (
+            <Avatar
+              name={currentUser.displayName}
+              size="sm"
+              src="https://bit.ly/tioluwani-kolawole"
+            />
+          ) : (
+            <Button
+              display={{ base: "inline-flex" }}
+              fontSize={"sm"}
+              fontWeight={600}
+              color={"white"}
+              bg={"purple.600"}
+              onClick={onOpenLoginModal}
+              _hover={{
+                bg: "purple.400",
+              }}
+            >
+              Log In
+            </Button>
+          )}
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <NavItemWrap />
       </Collapse>
     </Box>
   );
-}
+};
 export default NavBar;
 
 const DesktopNav = () => {
   return (
     <Stack direction={"row"} spacing={4}>
-    {/* のちに検索フォームなどをいれる */}
+      {/* のちに検索フォームなどをいれる */}
     </Stack>
   );
 };
 
-const MobileNav = () => {
+const NavItemWrap = () => {
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const toast = useToast()
+
+  const logout = () => {
+    setCurrentUser(null);
+    firebase.auth().signOut().then(() => {
+      toast({
+        title: "ログアウトしました",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      })
+    })
+  };
+
   return (
-    <Stack
-      bg={useColorModeValue("white", "gray.800")}
-      p={4}
-    >
+    <Stack bg={useColorModeValue("white", "gray.800")} p={4}>
       {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
+        <NavItem key={navItem.label} {...navItem} />
       ))}
+      {currentUser && (
+        <Button w={60} onClick={logout}>
+          Logout
+        </Button>
+      )}
     </Stack>
   );
 };
 
-const MobileNavItem = ({ label, href }: NavItem) => {
+const NavItem = ({ label, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
