@@ -37,7 +37,7 @@ export default function NavBar() {
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
+          display={{ base: "flex", md: "start" }}
         >
           <IconButton
             onClick={onToggle}
@@ -76,17 +76,8 @@ export default function NavBar() {
               <MoonIcon onClick={toggleColorMode} />
             )}
           </Square>
-          {/* <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-          >
-            Sign In
-          </Button> */}
           <Button
-            display={{ base: "none", md: "inline-flex" }}
+            display={{ base: "inline-flex" }}
             fontSize={"sm"}
             fontWeight={600}
             color={"white"}
@@ -111,23 +102,7 @@ export default function NavBar() {
 const DesktopNav = () => {
   return (
     <Stack direction={"row"} spacing={4}>
-      {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label}>
-          <Link
-            p={2}
-            href={navItem.href ?? "#"}
-            fontSize={"sm"}
-            fontWeight={500}
-            color={useColorModeValue("gray.600", "gray.200")}
-            _hover={{
-              textDecoration: "none",
-              color: useColorModeValue("gray.800", "white"),
-            }}
-          >
-            {navItem.label}
-          </Link>
-        </Box>
-      ))}
+    {/* のちに検索フォームなどをいれる */}
     </Stack>
   );
 };
@@ -137,7 +112,6 @@ const MobileNav = () => {
     <Stack
       bg={useColorModeValue("white", "gray.800")}
       p={4}
-      display={{ md: "none" }}
     >
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
