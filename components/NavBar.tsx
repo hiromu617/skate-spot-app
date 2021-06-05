@@ -17,7 +17,11 @@ import {
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-export default function NavBar() {
+type Props = {
+  onOpenLoginModal: () => void;
+};
+
+const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -82,7 +86,7 @@ export default function NavBar() {
             fontWeight={600}
             color={"white"}
             bg={"purple.600"}
-            href={"#"}
+            onClick={onOpenLoginModal}
             _hover={{
               bg: "purple.400",
             }}
@@ -98,6 +102,7 @@ export default function NavBar() {
     </Box>
   );
 }
+export default NavBar;
 
 const DesktopNav = () => {
   return (
