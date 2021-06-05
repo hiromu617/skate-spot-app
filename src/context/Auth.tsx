@@ -1,15 +1,15 @@
-import { User } from 'firebase';
+import firebase from 'firebase';
 import { FC, createContext, useEffect, useState } from 'react';
 
-import firebase from '../../constants/firebase';
+import firebaseInstance from '../../constants/firebase';
 
 const AuthContext = createContext({} as{
-  currentUser: User | null | undefined
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>
+  currentUser: firebaseInstance.User | null | undefined
+  setCurrentUser: React.Dispatch<React.SetStateAction<firebaseInstance.User | null | undefined>>
 });
 
 const AuthProvider: FC = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>(
+  const [currentUser, setCurrentUser] = useState<firebase.User | null | undefined>(
     undefined
   );
 
