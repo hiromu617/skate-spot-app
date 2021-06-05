@@ -4,6 +4,8 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import axios from "../constants/axios";
 import Link from "next/link";
+import {Spot} from "../types/spot"
+import { LinkBox, LinkOverlay } from "@chakra-ui/react"
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
@@ -18,10 +20,6 @@ export const getServerSideProps = async () => {
 type Props = {
   spots: Spot[];
 };
-type Spot = {
-  name: string;
-  id: number;
-};
 
 const Home: React.FC<Props> = ({ spots }) => {
   console.log(spots);
@@ -35,12 +33,12 @@ const Home: React.FC<Props> = ({ spots }) => {
 
       <main>
         <Center>
-          <Stack p={8}>
+          <Stack p={8} w="lg">
             <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
               return (
                 <Link href="/spot/[id]" as={`/spot/${spot.id}`}>
-                  <Box boxShadow={"xl"} rounded={"md"} p={5}>
+                  <Box borderWidth="1px" rounded={"md"} p={5}>
                     <Heading size="md">{spot.name}</Heading>
                   </Box>
                 </Link>

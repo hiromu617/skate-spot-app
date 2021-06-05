@@ -1,26 +1,16 @@
 import axios from "../../constants/axios"
+import useSWR from 'swr'
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await axios.get("/api/spots/" + context.params.id);
-  const spot = res.data;
-  return {
-    props: {
-      spot,
-    },
-  };
-};
+const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
-type Props = {
-  spot: Spot;
-};
-type Spot = {
-  name: string;
-  id: number;
-};
-
-const spotShow: React.FC<Props> = ({ spot }) => {
+const spotShow: React.FC= () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: spot, error } = useSWR('/api/spots/'+id, fetcher)
+  
+  if (error) return <div>failed to load</div>
+  if (!spot) return <div>loading...</div>
 
   return (
     <div>
