@@ -37,7 +37,7 @@ const Home: React.FC<Props> = ({ spots }) => {
             <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
               return (
-                <Link href="/spot/[id]" as={`/spot/${spot.id}`}>
+                <Link key={spot.id} href="/spot/[id]" as={`/spot/${spot.id}`}>
                   <Box borderWidth="1px" rounded={"md"} p={5}>
                     <Heading size="md">{spot.name}</Heading>
                   </Box>

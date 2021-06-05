@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import NavBar from "../components/NavBar";
+import NavBar from "../src/components/NavBar";
 import {
   Modal,
   ModalOverlay,
@@ -12,19 +12,18 @@ import {
   ChakraProvider,
   useDisclosure,
 } from "@chakra-ui/react";
+import { AuthProvider } from "../src/context/Auth";
+import AuthModal from "../src/components/AuthModal";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <ChakraProvider>
-      <NavBar onOpenLoginModal={onOpen} />
-      <Component {...pageProps} />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody>LOGIN</ModalBody>
-        </ModalContent>
-      </Modal>
+      <AuthProvider>
+        <NavBar onOpenLoginModal={onOpen} />
+        <AuthModal isOpen={isOpen} onClose={onClose}/>
+        <Component {...pageProps} />
+      </AuthProvider>
     </ChakraProvider>
   );
 }
