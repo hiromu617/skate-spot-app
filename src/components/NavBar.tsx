@@ -86,7 +86,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
               <MoonIcon onClick={toggleColorMode} />
             )}
           </Square>
-          {currentUser ? (
+          {currentUser?.displayName ? (
             <Avatar
               name={currentUser.displayName}
               size="sm"
