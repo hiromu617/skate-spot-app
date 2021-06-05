@@ -2,9 +2,10 @@ import { Heading, Stack, Center, Box, Text } from "@chakra-ui/layout";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import axios from '../constants/axios'
+import axios from "../constants/axios";
+import Link from "next/link";
 
-export const getServerSideProps = async() =>  {
+export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
   const spots = res.data;
   return {
@@ -12,16 +13,15 @@ export const getServerSideProps = async() =>  {
       spots,
     },
   };
-}
-
+};
 
 type Props = {
-  spots: Spot[]
-}
+  spots: Spot[];
+};
 type Spot = {
-  name: string,
-  id: number
-}
+  name: string;
+  id: number;
+};
 
 const Home: React.FC<Props> = ({ spots }) => {
   console.log(spots);
@@ -39,9 +39,11 @@ const Home: React.FC<Props> = ({ spots }) => {
             <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
               return (
-                <Box boxShadow={"xl"} rounded={"md"} p={5}>
-                  <Heading size="md">{spot.name}</Heading>
-                </Box>
+                <Link href="/spot/[id]" as={`/spot/${spot.id}`}>
+                  <Box boxShadow={"xl"} rounded={"md"} p={5}>
+                    <Heading size="md">{spot.name}</Heading>
+                  </Box>
+                </Link>
               );
             })}
           </Stack>
@@ -49,5 +51,5 @@ const Home: React.FC<Props> = ({ spots }) => {
       </main>
     </div>
   );
-}
+};
 export default Home;
