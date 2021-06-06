@@ -1,22 +1,32 @@
 import firebase from 'firebase';
 import { FC, createContext, useEffect, useState } from 'react';
-
-import firebaseInstance from '../../constants/firebase';
+import axios from '../../constants/axios'
+import {User} from '../../types/user'
 
 const AuthContext = createContext({} as{
-  currentUser: firebaseInstance.User | null | undefined
-  setCurrentUser: React.Dispatch<React.SetStateAction<firebaseInstance.User | null | undefined>>
+  currentUser: User | null | undefined
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null | undefined>>
 });
 
 const AuthProvider: FC = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<firebase.User | null | undefined>(
+  const [currentUser, setCurrentUser] = useState<User | null | undefined>(
     undefined
   );
 
   useEffect(() => {
     // ログイン状態が変化するとfirebaseのauthメソッドを呼び出す
-    firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
+    firebase.auth().onAuthStateChanged(async (user) => {
+      await axios.post('/api/users/', {
+        user: {
+          uid: user?.uid,
+          name: user?.displayName
+        }
+      })
+      .then(res => {
+        console.log(res.data)
+        setCurrentUser(res.data);
+      })
+      .catch(e => console.log(e))
       console.log(user?.uid)
       console.log(user?.displayName)
     })

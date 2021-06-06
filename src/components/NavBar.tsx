@@ -86,9 +86,9 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
               <MoonIcon onClick={toggleColorMode} />
             )}
           </Square>
-          {currentUser?.displayName ? (
+          {currentUser?.name ? (
             <Avatar
-              name={currentUser.displayName}
+              name={currentUser.name}
               size="sm"
               src="https://bit.ly/tioluwani-kolawole"
             />
@@ -99,6 +99,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
               fontWeight={600}
               color={"white"}
               bg={"purple.600"}
+              isLoading={currentUser === undefined}
               onClick={onOpenLoginModal}
               _hover={{
                 bg: "purple.400",
