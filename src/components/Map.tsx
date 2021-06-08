@@ -47,7 +47,7 @@ const Map: React.FC<Props> = ({ position, setPosition }) => {
   //   })
   // };
   return (
-    <LoadScript googleMapsApiKey={apiKey}>
+    <LoadScript googleMapsApiKey="AIzaSyDa9_y4OMeMtT554UvlPrgWHZr9Jgp2H2s">
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
