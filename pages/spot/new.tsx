@@ -11,15 +11,20 @@ import {
   Button,
   useColorModeValue,
   useToast,
+  Textarea,
+  Select,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
 import axios from "../../constants/axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Map from "../../src/components/Map";
+import { AuthContext } from "../../src/context/Auth";
 
 type FormData = {
   name: string;
+  description: string;
+  prefectures: string;
 };
 
 type Position = {
@@ -28,10 +33,11 @@ type Position = {
 };
 
 function New() {
+  const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [position, setPosition] = useState<Position| null>(null);
+  const [position, setPosition] = useState<Position | null>(null);
   const toast = useToast();
-
+  const PrefecturesList = ['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県']
   const {
     handleSubmit,
     register,
@@ -39,11 +45,34 @@ function New() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit(async (data) => {
+    if (!currentUser) {
+      toast({
+        title: "ログインしてください",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (!position) {
+      toast({
+        title: "位置情報を設定してください",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
     setLoading(true);
     await axios
       .post("/api/spots/", {
         spot: {
           name: data.name,
+          description: data.description,
+          prefectures: data.prefectures,
+          lat: position.lat,
+          lng: position.lng,
+          user_id: currentUser.id,
         },
       })
       .then(() => {
@@ -92,8 +121,43 @@ function New() {
                 </FormErrorMessage>
               </FormControl>
 
+              <FormControl isInvalid={!!errors.description} mb={10}>
+                <FormLabel htmlFor="description">スポットの説明</FormLabel>
+                <Textarea
+                  id="description"
+                  placeholder="路面がよくて、長良川と金華山が見える最高のスポットです。"
+                  {...register("description", {
+                    maxLength: {
+                      value: 140,
+                      message: "140文字以内で入力してください",
+                    },
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.description && errors.description.message}
+                </FormErrorMessage>
+              </FormControl>
+
+              <FormControl isInvalid={!!errors.prefectures} mb={10}>
+                <FormLabel htmlFor="prefectures">都道府県</FormLabel>
+                <Select
+                  id="prefectures"
+                  placeholder="please"
+                  {...register("prefectures", {
+                    required: "この項目は必須です",
+                  })}
+                >
+                  {PrefecturesList.map(p => {
+                    return <option value={p}>{p}</option>
+                  })}
+                </Select>
+                <FormErrorMessage>
+                  {errors.prefectures && errors.prefectures.message}
+                </FormErrorMessage>
+              </FormControl>
+
               <FormLabel>位置情報</FormLabel>
-              <Map setPosition={setPosition} position={position}/>
+              <Map setPosition={setPosition} position={position} />
               <Button
                 mt={4}
                 bg="purple.600"

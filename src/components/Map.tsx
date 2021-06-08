@@ -18,10 +18,8 @@ import { FcGoogle } from "react-icons/fc";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 type Props = {
-  setPosition: React.Dispatch<
-  React.SetStateAction<Position | null >
->;
-  position: Position | null
+  setPosition: React.Dispatch<React.SetStateAction<Position | null>>;
+  position: Position | null;
 };
 
 const containerStyle = {
@@ -37,7 +35,7 @@ type Position = {
   lng: number;
 };
 
-const Map: React.FC<Props> = ({position, setPosition}) => {
+const Map: React.FC<Props> = ({ position, setPosition }) => {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
   // const fetchPrefecture = (latLng: Position) => {
   //   const geocoder = new window.google.maps.Geocoder();
@@ -62,10 +60,6 @@ const Map: React.FC<Props> = ({position, setPosition}) => {
       >
         <Marker position={position} />
       </GoogleMap>
-      <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
     </LoadScript>
   );
 };
