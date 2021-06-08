@@ -15,15 +15,22 @@ import {
 import { useForm } from "react-hook-form";
 import Head from "next/head";
 import axios from "../../constants/axios";
-import {useState} from 'react'
+import { useState } from "react";
+import Map from "../../src/components/Map";
 
 type FormData = {
   name: string;
 };
 
+type Position = {
+  lat: number;
+  lng: number;
+};
+
 function New() {
-  const [loading, setLoading] = useState<boolean>(false)
-  const toast = useToast()
+  const [loading, setLoading] = useState<boolean>(false);
+  const [position, setPosition] = useState<Position| null>(null);
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -32,21 +39,22 @@ function New() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit(async (data) => {
-    setLoading(true)
-    await axios.post("/api/spots/", {
-      spot: {
-        name: data.name,
-      },
-    })
-    .then(() => {
-      setLoading(false)
-      toast({
-        title: "スポットを投稿しました",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
+    setLoading(true);
+    await axios
+      .post("/api/spots/", {
+        spot: {
+          name: data.name,
+        },
       })
-    })
+      .then(() => {
+        setLoading(false);
+        toast({
+          title: "スポットを投稿しました",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   });
 
   return (
@@ -57,16 +65,16 @@ function New() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center p={5}>
-        <div>
+        <Stack w={{ base: "90%", md: "500px" }}>
           <Heading pb={10} color={useColorModeValue("gray.900", "white")}>
-            新しいスポットを投稿
+            新しいスポット
           </Heading>
           <Stack spacing={5}>
             <Heading size="md" color={useColorModeValue("gray.900", "white")}>
               スポット情報
             </Heading>
             <form onSubmit={onSubmit}>
-              <FormControl isInvalid={!!errors.name}>
+              <FormControl isInvalid={!!errors.name} mb={10}>
                 <FormLabel htmlFor="name">スポット名</FormLabel>
                 <Input
                   id="name"
@@ -83,6 +91,9 @@ function New() {
                   {errors.name && errors.name.message}
                 </FormErrorMessage>
               </FormControl>
+
+              <FormLabel>位置情報</FormLabel>
+              <Map setPosition={setPosition} position={position}/>
               <Button
                 mt={4}
                 bg="purple.600"
@@ -98,7 +109,7 @@ function New() {
               </Button>
             </form>
           </Stack>
-        </div>
+        </Stack>
       </Center>
     </div>
   );
