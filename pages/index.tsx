@@ -40,6 +40,9 @@ const Home: React.FC<Props> = ({ spots }) => {
                 <Link key={spot.id} href="/spot/[id]" as={`/spot/${spot.id}`}>
                   <Box borderWidth="1px" rounded={"md"} p={5}>
                     <Heading size="md">{spot.name}</Heading>
+                    <Text>{spot.created_at}</Text>
+                    <Text>{spot.prefectures}</Text>
+                    <Text>{spot.user.name}</Text>
                   </Box>
                 </Link>
               );
