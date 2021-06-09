@@ -36,7 +36,7 @@ type Position = {
 };
 
 const Map: React.FC<Props> = ({ position, setPosition }) => {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
+  const apiKey: string = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || '0';
   // const fetchPrefecture = (latLng: Position) => {
   //   const geocoder = new window.google.maps.Geocoder();
   //   geocoder.geocode({ location: latLng }, (results, status) => {
@@ -47,7 +47,7 @@ const Map: React.FC<Props> = ({ position, setPosition }) => {
   //   })
   // };
   return (
-    <LoadScript googleMapsApiKey="AIzaSyDa9_y4OMeMtT554UvlPrgWHZr9Jgp2H2s">
+    <LoadScript googleMapsApiKey={apiKey}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}

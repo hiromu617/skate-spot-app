@@ -41,7 +41,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
         px={{ base: 4 }}
         borderBottom={1}
         borderStyle={"solid"}
-        borderColor={useColorModeValue("gray.200", "gray.900")}
+        borderColor={useColorModeValue("gray.200", "gray.500")}
         align={"center"}
       >
         <Flex
