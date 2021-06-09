@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/layout";
 import SpotMap from "../../src/components/SpotMap";
 import { Avatar } from "@chakra-ui/avatar";
+import format from "date-fns/format";
+import { ja } from "date-fns/locale";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -23,6 +25,7 @@ const spotShow: React.FC = () => {
   console.log(spot)
   if (error) return <div>failed to load</div>;
   if (!spot) return <div>loading...</div>;
+  const date = new Date(spot.created_at);
 
   return (
     <Center>
@@ -38,7 +41,7 @@ const spotShow: React.FC = () => {
           <Avatar size="sm" mr="2" src="https://bit.ly/tioluwani-kolawole" />
           <Text>{spot.user.name}</Text>
         </Flex>
-        <Text>{spot.created_at}</Text>
+        <Text>{format(date, 'P p', {locale: ja})}</Text>
         <Text pt={8}>{spot.description}</Text>
         <SpotMap lat={spot.lat} lng={spot.lng} />
       </Stack>
