@@ -55,7 +55,7 @@ const Home: React.FC<Props> = ({ spots }) => {
                   <Box borderWidth="1px" rounded={"md"} p={5}>
                     <Heading size="md" mb={5}>
                       <Badge
-                        colorScheme="green"
+                        colorScheme="purple"
                         size="xl"
                         fontSize="1rem"
                         mr="2"
@@ -68,7 +68,7 @@ const Home: React.FC<Props> = ({ spots }) => {
                       <Avatar
                         size="sm"
                         mr="2"
-                        src="https://bit.ly/tioluwani-kolawole"
+                        src=""
                       />
                       <Text>{spot.user.name}</Text>
                       <Spacer/>
