@@ -14,24 +14,25 @@ import styles from "../styles/Home.module.css";
 import axios from "../../constants/axios";
 import Link from "next/link";
 import { Spot } from "../../types/spot";
-import SpotCard from '../../src/components/SpotCard'
+import SpotCard from "../../src/components/SpotCard";
+import useSWR from "swr";
+import { useState } from "react";
 
-export const getServerSideProps = async () => {
-  const res = await axios.get("/api/spots/");
-  const spots = res.data;
-  return {
-    props: {
-      spots,
-    },
-  };
-};
+const SpotIndex: React.FC = () => {
+  const fetcher = (url: string) =>
+    axios.get(url).then((res) => {
+      // console.log(res)
+      return res.data;
+    });
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const { data: spots, error } = useSWR(
+    `/api/spots?page=${pageIndex}`,
+    fetcher
+  );
 
-type Props = {
-  spots: Spot[];
-};
+  if (error) return <h1>error</h1>;
+  if (!spots) return <h1>loading...</h1>;
 
-const SpotIndex: React.FC<Props> = ({ spots }) => {
-  console.log(spots);
   return (
     <div>
       <Head>
@@ -44,11 +45,18 @@ const SpotIndex: React.FC<Props> = ({ spots }) => {
         <Center>
           <Stack p={8} w="lg">
             <Heading>スポット一覧</Heading>
-            {spots.map((spot) => {
-              return (
-                <SpotCard spot={spot}/>
-              );
+            {spots.map((spot: Spot) => {
+              return <SpotCard key={spot.id} spot={spot} />;
             })}
+            <Flex justifyContent="space-between">
+              <button
+                disabled={pageIndex == 1}
+                onClick={() => setPageIndex(pageIndex - 1)}
+              >
+                Previous
+              </button>
+              <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
+            </Flex>
           </Stack>
         </Center>
       </main>

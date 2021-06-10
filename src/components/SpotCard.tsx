@@ -12,7 +12,7 @@ type Props = {
 
 const SpotCard: React.FC<Props> = ({ spot }) => {
   return (
-    <Link key={spot.id} href="/spot/[id]" as={`/spot/${spot.id}`}>
+    <Link href="/spot/[id]" as={`/spot/${spot.id}`}>
       <Box borderWidth="1px" rounded={"md"} p={5}>
         <Heading size="md" mb={5}>
           <Tag colorScheme="purple" mr="2">

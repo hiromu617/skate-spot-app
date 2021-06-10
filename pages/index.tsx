@@ -47,7 +47,7 @@ const Home: React.FC<Props> = ({ spots }) => {
             <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
               return (
-              <SpotCard spot={spot}/>
+              <SpotCard key={spot.id} spot={spot}/>
               );
             })}
             <Link href="/spot">
