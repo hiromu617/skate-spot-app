@@ -8,17 +8,14 @@ import {
   Spacer,
 } from "@chakra-ui/layout";
 import { Tag, Button } from "@chakra-ui/react";
-import { Avatar } from "@chakra-ui/avatar";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import axios from "../constants/axios";
 import Link from "next/link";
 import { Spot } from "../types/spot";
-import { LinkBox, LinkOverlay } from "@chakra-ui/react";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { ja } from "date-fns/locale";
 import { FiArrowRight } from "react-icons/fi";
+import SpotCard from '../src/components/SpotCard'
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
@@ -49,30 +46,8 @@ const Home: React.FC<Props> = ({ spots }) => {
           <Stack p={8} w="lg">
             <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
-              const date = new Date(spot.created_at);
-              console.log(date);
               return (
-                <Link key={spot.id} href="/spot/[id]" as={`/spot/${spot.id}`}>
-                  <Box borderWidth="1px" rounded={"md"} p={5}>
-                    <Heading size="md" mb={5}>
-                      <Tag colorScheme="purple" mr="2">
-                        {spot.prefectures}
-                      </Tag>
-                      {spot.name}
-                    </Heading>
-                    <Flex align="center">
-                      <Avatar size="sm" mr="2" src="" />
-                      <Text>{spot.user.name}</Text>
-                      <Spacer />
-                      <Text fontSize="xs">
-                        {formatDistanceToNow(date, {
-                          addSuffix: true,
-                          locale: ja,
-                        })}
-                      </Text>
-                    </Flex>
-                  </Box>
-                </Link>
+              <SpotCard spot={spot}/>
               );
             })}
             <Link href="/spot">
