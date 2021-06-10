@@ -4,21 +4,23 @@ import {
   Center,
   Box,
   Text,
+  Badge,
   Flex,
   Spacer,
 } from "@chakra-ui/layout";
-import { Tag, Button } from "@chakra-ui/react";
+import {
+  Tag,
+} from "@chakra-ui/react"
 import { Avatar } from "@chakra-ui/avatar";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import axios from "../constants/axios";
+import axios from "../../constants/axios";
 import Link from "next/link";
-import { Spot } from "../types/spot";
+import { Spot } from "../../types/spot";
 import { LinkBox, LinkOverlay } from "@chakra-ui/react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { ja } from "date-fns/locale";
-import { FiArrowRight } from "react-icons/fi";
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
@@ -34,7 +36,7 @@ type Props = {
   spots: Spot[];
 };
 
-const Home: React.FC<Props> = ({ spots }) => {
+const SpotIndex: React.FC<Props> = ({ spots }) => {
   console.log(spots);
   return (
     <div>
@@ -47,7 +49,7 @@ const Home: React.FC<Props> = ({ spots }) => {
       <main>
         <Center>
           <Stack p={8} w="lg">
-            <Heading>新着のスポット</Heading>
+            <Heading>スポット一覧</Heading>
             {spots.map((spot) => {
               const date = new Date(spot.created_at);
               console.log(date);
@@ -55,15 +57,22 @@ const Home: React.FC<Props> = ({ spots }) => {
                 <Link key={spot.id} href="/spot/[id]" as={`/spot/${spot.id}`}>
                   <Box borderWidth="1px" rounded={"md"} p={5}>
                     <Heading size="md" mb={5}>
-                      <Tag colorScheme="purple" mr="2">
+                      <Tag
+                        colorScheme="purple"
+                        mr="2"
+                      >
                         {spot.prefectures}
                       </Tag>
                       {spot.name}
                     </Heading>
                     <Flex align="center">
-                      <Avatar size="sm" mr="2" src="" />
+                      <Avatar
+                        size="sm"
+                        mr="2"
+                        src=""
+                      />
                       <Text>{spot.user.name}</Text>
-                      <Spacer />
+                      <Spacer/>
                       <Text fontSize="xs">
                         {formatDistanceToNow(date, {
                           addSuffix: true,
@@ -75,13 +84,10 @@ const Home: React.FC<Props> = ({ spots }) => {
                 </Link>
               );
             })}
-            <Link href="/spot">
-              <Button rightIcon={<FiArrowRight />}>もっと見る</Button>
-            </Link>
           </Stack>
         </Center>
       </main>
     </div>
   );
 };
-export default Home;
+export default SpotIndex;

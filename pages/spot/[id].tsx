@@ -15,7 +15,7 @@ import SpotMap from "../../src/components/SpotMap";
 import { Avatar } from "@chakra-ui/avatar";
 import format from "date-fns/format";
 import { ja } from "date-fns/locale";
-import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
+import { Skeleton, SkeletonCircle, SkeletonText, Tag } from "@chakra-ui/react";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -51,11 +51,11 @@ const spotShow: React.FC = () => {
     <Center>
       <Stack p={4} w={{ base: "90%", md: "550px" }}>
         <Flex>
-          <Badge colorScheme="purple" size="xl" fontSize="1.75rem" mr="2">
+          <Tag colorScheme="purple" size="lg" mr="2">
             {spot.prefectures}
-          </Badge>
-        </Flex>
+          </Tag>
         <Heading>{spot.name}</Heading>
+        </Flex>
         <Flex flex="end" align="center">
           <Spacer />
           <Avatar size="sm" mr="2" src="" />
