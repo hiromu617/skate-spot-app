@@ -17,7 +17,7 @@ import format from "date-fns/format";
 import { ja } from "date-fns/locale";
 import { Skeleton, SkeletonCircle, SkeletonText, Tag } from "@chakra-ui/react";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
 const spotShow: React.FC = () => {
   const router = useRouter();
