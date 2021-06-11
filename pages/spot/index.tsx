@@ -17,12 +17,14 @@ import { Spot } from "../../types/spot";
 import SpotCard from "../../src/components/SpotCard";
 import useSWR from "swr";
 import { useState } from "react";
-import { Button, ButtonGroup } from "@chakra-ui/react"
-import {MdKeyboardArrowRight, MdKeyboardArrowLeft} from "react-icons/md"
+import { Button, ButtonGroup } from "@chakra-ui/react";
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
+import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
+
 const SpotIndex: React.FC = () => {
   const fetcher = (url: string) =>
     axios.get(url).then((res) => {
-    setTotalPages(res.data.meta.totalPages);
+      setTotalPages(res.data.meta.totalPages);
       return res.data.spots;
     });
   const [pageIndex, setPageIndex] = useState<number>(1);
@@ -33,7 +35,17 @@ const SpotIndex: React.FC = () => {
   );
 
   if (error) return <h1>error</h1>;
-  if (!spots) return <h1>loading...</h1>;
+  if (!spots)
+    return (
+      <Center>
+        <Stack p={8} w="lg">
+          <Skeleton height="80px"></Skeleton>
+          <Skeleton height="110px"></Skeleton>
+          <Skeleton height="110px"></Skeleton>
+          <Skeleton height="110px"></Skeleton>
+        </Stack>
+      </Center>
+    );
 
   return (
     <div>
@@ -54,7 +66,7 @@ const SpotIndex: React.FC = () => {
               <Button
                 disabled={pageIndex == 1}
                 onClick={() => setPageIndex(pageIndex - 1)}
-                leftIcon={<MdKeyboardArrowLeft/>}
+                leftIcon={<MdKeyboardArrowLeft />}
                 variant="outline"
               >
                 Previous
@@ -62,7 +74,7 @@ const SpotIndex: React.FC = () => {
               <Button
                 disabled={pageIndex == totalPages}
                 onClick={() => setPageIndex(pageIndex + 1)}
-                rightIcon={<MdKeyboardArrowRight/>}
+                rightIcon={<MdKeyboardArrowRight />}
                 variant="outline"
               >
                 Next

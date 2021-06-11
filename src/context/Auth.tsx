@@ -30,7 +30,7 @@ const AuthProvider: FC = ({ children }) => {
             },
           })
           .then((res) => {
-            setCurrentUser(res.data);
+            setCurrentUser(res.data.user);
           })
           .catch((e) => console.log(e));
       }else{

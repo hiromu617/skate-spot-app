@@ -86,6 +86,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
               <MoonIcon onClick={toggleColorMode} />
             )}
           </Square>
+          {console.log(currentUser)}
           {currentUser?.name ? (
             <Avatar
               name={currentUser.name}
@@ -129,6 +130,7 @@ const DesktopNav = () => {
 
 const NavItemWrap = () => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { isOpen, onToggle } = useDisclosure();
   const toast = useToast()
 
   const logout = () => {
