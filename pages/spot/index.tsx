@@ -17,14 +17,16 @@ import { Spot } from "../../types/spot";
 import SpotCard from "../../src/components/SpotCard";
 import useSWR from "swr";
 import { useState } from "react";
-
+import { Button, ButtonGroup } from "@chakra-ui/react"
+import {MdKeyboardArrowRight, MdKeyboardArrowLeft} from "react-icons/md"
 const SpotIndex: React.FC = () => {
   const fetcher = (url: string) =>
     axios.get(url).then((res) => {
-      // console.log(res)
-      return res.data;
+    setTotalPages(res.data.meta.totalPages);
+      return res.data.spots;
     });
   const [pageIndex, setPageIndex] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const { data: spots, error } = useSWR(
     `/api/spots?page=${pageIndex}`,
     fetcher
@@ -49,13 +51,22 @@ const SpotIndex: React.FC = () => {
               return <SpotCard key={spot.id} spot={spot} />;
             })}
             <Flex justifyContent="space-between">
-              <button
+              <Button
                 disabled={pageIndex == 1}
                 onClick={() => setPageIndex(pageIndex - 1)}
+                leftIcon={<MdKeyboardArrowLeft/>}
+                variant="outline"
               >
                 Previous
-              </button>
-              <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
+              </Button>
+              <Button
+                disabled={pageIndex == totalPages}
+                onClick={() => setPageIndex(pageIndex + 1)}
+                rightIcon={<MdKeyboardArrowRight/>}
+                variant="outline"
+              >
+                Next
+              </Button>
             </Flex>
           </Stack>
         </Center>

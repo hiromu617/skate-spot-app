@@ -19,7 +19,7 @@ import SpotCard from '../src/components/SpotCard'
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
-  const spots = res.data;
+  const spots = res.data.spots;
   return {
     props: {
       spots,
