@@ -15,15 +15,50 @@ import SpotMap from "../../src/components/SpotMap";
 import { Avatar } from "@chakra-ui/avatar";
 import format from "date-fns/format";
 import { ja } from "date-fns/locale";
-import { Skeleton, SkeletonCircle, SkeletonText, Tag } from "@chakra-ui/react";
+import { Skeleton, SkeletonCircle, SkeletonText, Tag, Image } from "@chakra-ui/react";
+import firebase from 'firebase'
+import { useEffect, useState, useCallback } from "react";
+
+const getImage = (id: number) => {
+  return new Promise((resolve) => {
+    var storage = firebase.storage();
+    var storageRef = storage.ref();
+    var spaceRef = storageRef.child(`spots/${id}`);
+    spaceRef
+      .getDownloadURL()
+      .then(function (url: string) {
+        console.log("ファイルURLを取得");
+        console.log(url);
+        resolve(url);
+      })
+      .catch(function (error) {
+        // Handle any errors
+        console.log(error);
+      });
+  });
+};
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
 const spotShow: React.FC = () => {
+  const [imageSrc, setImageSrc] = useState<any | null>()
   const router = useRouter();
   const { id } = router.query;
   const { data: spot, error } = useSWR("/api/spots/" + id, fetcher);
   // console.log(spot);
+  useEffect(() => {
+    // imageがnullの時imageを取得
+    if (id !=undefined) {
+      getSpotImage(+id);
+    }
+  }, [id]);
+
+  const getSpotImage = useCallback(async (id: number) => {
+    getImage(id).then((res) => {
+      setImageSrc(res);
+    });
+  }, []);
+
   if (error) return <div>failed to load</div>;
 
   // ロード中はスケルトンを表示
@@ -50,6 +85,7 @@ const spotShow: React.FC = () => {
   return (
     <Center>
       <Stack p={4} w={{ base: "90%", md: "550px" }}>
+        {imageSrc && <Image src={imageSrc}/>}
         <Flex>
           <Tag colorScheme="purple" size="lg" mr="2">
             {spot.prefectures}
