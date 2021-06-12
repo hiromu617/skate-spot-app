@@ -20,6 +20,8 @@ import axios from "../../constants/axios";
 import { useState, useContext } from "react";
 import Map from "../../src/components/Map";
 import { AuthContext } from "../../src/context/Auth";
+import ImageUpload from "../../src/components/ImageUpload";
+import firebase from "../../constants/firebase";
 
 type FormData = {
   name: string;
@@ -36,6 +38,7 @@ function New() {
   const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [position, setPosition] = useState<Position | null>(null);
+  const [myFiles, setMyFiles] = useState<File[]>([]);
   const toast = useToast();
   const PrefecturesList = [
     "北海道",
@@ -92,6 +95,30 @@ function New() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
+  const handleUpload = async (fileName: string) => {
+    const storage = firebase.storage();
+    try {
+      // アップロード処理
+      const uploadTask: any = storage.ref(`/spots/${fileName}`).put(myFiles[0]);
+
+      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, next, error);
+    } catch (error) {
+      console.log("エラーキャッチ", error);
+    }
+  };
+
+  const next = (snapshot: { bytesTransferred: number; totalBytes: number }) => {
+    // 進行中のsnapshotを得る
+    // アップロードの進行度を表示
+    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(percent + "% done");
+    console.log(snapshot);
+  };
+
+  const error = (error: any) => {
+    alert(error);
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     if (!currentUser) {
       toast({
@@ -123,7 +150,8 @@ function New() {
           user_id: currentUser.id,
         },
       })
-      .then(() => {
+      .then((res) => {
+        handleUpload(res.data.spot.id);
         setLoading(false);
         toast({
           title: "スポットを投稿しました",
@@ -146,12 +174,15 @@ function New() {
           <Heading pb={10} color={useColorModeValue("gray.900", "white")}>
             新しいスポット
           </Heading>
-          <Stack spacing={5}>
-            <Heading size="md" color={useColorModeValue("gray.900", "white")}>
-              スポット情報
-            </Heading>
+          <Stack spacing={3}>
             <form onSubmit={onSubmit}>
-              <FormControl isInvalid={!!errors.name} mb={10}>
+              <ImageUpload myFiles={myFiles} setMyFiles={setMyFiles} />
+              {myFiles.length > 0 && (
+                <Button onClick={() => setMyFiles([])} my={5}>
+                  削除
+                </Button>
+              )}
+              <FormControl isInvalid={!!errors.name} mb={5}>
                 <FormLabel htmlFor="name">スポット名</FormLabel>
                 <Input
                   id="name"
@@ -169,7 +200,7 @@ function New() {
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.description} mb={10}>
+              <FormControl isInvalid={!!errors.description} mb={5}>
                 <FormLabel htmlFor="description">スポットの説明</FormLabel>
                 <Textarea
                   id="description"
@@ -186,7 +217,7 @@ function New() {
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.prefectures} mb={10}>
+              <FormControl isInvalid={!!errors.prefectures} mb={5}>
                 <FormLabel htmlFor="prefectures">都道府県</FormLabel>
                 <Select
                   id="prefectures"
@@ -203,13 +234,15 @@ function New() {
                   {errors.prefectures && errors.prefectures.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!position} mb={10}>
+              <FormControl isInvalid={!position} mb={5}>
                 <FormLabel>位置情報</FormLabel>
-                <FormHelperText mb={3}>スポットの位置にピンを立ててください</FormHelperText>
+                <FormHelperText mb={3}>
+                  スポットの位置にピンを立ててください
+                </FormHelperText>
                 <Map setPosition={setPosition} position={position} />
               </FormControl>
               <Button
-                mt={4}
+                size="lg"
                 bg="purple.600"
                 color={"white"}
                 isLoading={loading}
