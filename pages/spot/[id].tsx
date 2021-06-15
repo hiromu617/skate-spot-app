@@ -23,7 +23,7 @@ const getImage = (id: number) => {
   return new Promise((resolve) => {
     var storage = firebase.storage();
     var storageRef = storage.ref();
-    var spaceRef = storageRef.child(`spots/${id}`);
+    var spaceRef = storageRef.child(`spots/resized/${id}_200x150`);
     spaceRef
       .getDownloadURL()
       .then(function (url: string) {
