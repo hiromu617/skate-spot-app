@@ -65,7 +65,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
             color={useColorModeValue("gray.800", "white")}
             size="md"
           >
-            <Link href="/">SkateSpot.com</Link>
+            <Link href="/">SpotReview.com</Link>
           </Heading>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
