@@ -25,7 +25,10 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import firebase from "firebase";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
+import { AuthContext } from "../../src/context/Auth";
+import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Spot } from "../../types/spot";
 
 const getImage = (id: number) => {
   return new Promise((resolve) => {
@@ -46,13 +49,15 @@ const getImage = (id: number) => {
   });
 };
 
+
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
 const spotShow: React.FC = () => {
+  const { currentUser } = useContext(AuthContext);
   const [imageSrc, setImageSrc] = useState<any | null>();
   const router = useRouter();
   const { id } = router.query;
-  const { data: spot, error } = useSWR("/api/spots/" + id, fetcher);
+  const { data: spot, error } = useSWR<Spot>("/api/spots/" + id, fetcher);
   // console.log(spot);
   useEffect(() => {
     // imageがnullの時imageを取得
@@ -60,19 +65,19 @@ const spotShow: React.FC = () => {
       getSpotImage(+id);
     }
   }, [id]);
-
+  
   const getSpotImage = useCallback(async (id: number) => {
     getImage(id).then((res) => {
       setImageSrc(res);
     });
   }, []);
-
+  
   if (error) return <div>failed to load</div>;
-
+  
   // ロード中はスケルトンを表示
   if (!spot)
-    return (
-      <Center>
+  return (
+    <Center>
         <Stack p={4} w={{ base: "90%", md: "550px" }}>
           <Skeleton height="60px"></Skeleton>
           <Flex flex="end" align="center">
@@ -89,7 +94,7 @@ const spotShow: React.FC = () => {
         </Stack>
       </Center>
     );
-
+    
   return (
     <div>
       <Center px={3} pt={3}>
@@ -97,11 +102,32 @@ const spotShow: React.FC = () => {
       </Center>
       <Center>
         <Stack p={4} w={{ base: "95%", md: "650px" }}>
-          <Flex>
-            <Tag colorScheme="purple" size="lg" mr="2">
-              {spot.prefectures}
-            </Tag>
-            <Heading>{spot.name}</Heading>
+          <Flex justify="space-between" align="center">
+            <Heading>
+              <Tag colorScheme="purple" size="lg" mr="2">
+                {spot.prefectures}
+              </Tag>
+              {spot.name}
+            </Heading>
+            {currentUser?.id === spot.user.id && (
+              <Button
+              onClick={() =>
+                router.push({
+                  pathname: `/spot/edit/${spot.id}`,
+                    query: {
+                      name: spot.name,
+                      prefectures: spot.prefectures,
+                      lat: spot.lat,
+                      lng: spot.lng,
+                      description: spot.description,
+                      userid: spot.user.id
+                    },
+                  })
+                }
+                >
+                編集
+              </Button>
+            )}
           </Flex>
           <Flex flex="end" align="center">
             <Spacer />

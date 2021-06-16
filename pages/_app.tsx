@@ -14,9 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { AuthProvider } from "../src/context/Auth";
 import AuthModal from "../src/components/AuthModal";
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter()
+
+  useEffect(() => {
+    router.prefetch('/spot/new')
+  }, [])
+
   return (
     <ChakraProvider>
       <AuthProvider>

@@ -16,13 +16,14 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
-import axios from "../../constants/axios";
-import { useState, useContext } from "react";
-import Map from "../../src/components/Map";
-import { AuthContext } from "../../src/context/Auth";
-import ImageUpload from "../../src/components/ImageUpload";
-import firebase from "../../constants/firebase";
-import router from "next/router";
+import axios from "../../../constants/axios";
+import { useState, useContext, useEffect } from "react";
+import Map from "../../../src/components/Map";
+import { AuthContext } from "../../../src/context/Auth";
+import ImageUpload from "../../../src/components/ImageUpload";
+import firebase from "../../../constants/firebase";
+import { useRouter } from "next/router";
+import { quartersInYear } from "date-fns";
 
 type FormData = {
   name: string;
@@ -35,66 +36,29 @@ type Position = {
   lng: number;
 };
 
-function New() {
+function SpotEdit() {
+  const router = useRouter();
+  const { id, name, description, lat, lng, prefectures, userid } = router.query;
   const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [position, setPosition] = useState<Position | null>(null);
+  const [position, setPosition] = useState<Position | null>(
+    lat != undefined && lng !== undefined ? { lat: +lat, lng: +lng } : null
+  );
   const [myFiles, setMyFiles] = useState<File[]>([]);
   const toast = useToast();
-  const PrefecturesList = [
-    "北海道",
-    "青森県",
-    "岩手県",
-    "宮城県",
-    "秋田県",
-    "山形県",
-    "福島県",
-    "茨城県",
-    "栃木県",
-    "群馬県",
-    "埼玉県",
-    "千葉県",
-    "東京都",
-    "神奈川県",
-    "新潟県",
-    "富山県",
-    "石川県",
-    "福井県",
-    "山梨県",
-    "長野県",
-    "岐阜県",
-    "静岡県",
-    "愛知県",
-    "三重県",
-    "滋賀県",
-    "京都府",
-    "大阪府",
-    "兵庫県",
-    "奈良県",
-    "和歌山県",
-    "鳥取県",
-    "島根県",
-    "岡山県",
-    "広島県",
-    "山口県",
-    "徳島県",
-    "香川県",
-    "愛媛県",
-    "高知県",
-    "福岡県",
-    "佐賀県",
-    "長崎県",
-    "熊本県",
-    "大分県",
-    "宮崎県",
-    "鹿児島県",
-    "沖縄県",
-  ];
+  const PrefecturesList = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
+
+  useEffect(() => {
+    // currentUserとspotのuserが一致しなければredirect
+    if(!currentUser || userid == undefined|| currentUser.id != +userid){
+      router.push('/')
+    }
+  }, [])
 
   const handleUpload = async (fileName: string) => {
     const storage = firebase.storage();
@@ -141,22 +105,21 @@ function New() {
     }
     setLoading(true);
     await axios
-      .post("/api/spots/", {
+      .put("/api/spots/" + id, {
         spot: {
           name: data.name,
           description: data.description,
           prefectures: data.prefectures,
           lat: position.lat,
           lng: position.lng,
-          user_id: currentUser.id,
         },
       })
       .then((res) => {
         handleUpload(res.data.spot.id);
         setLoading(false);
-        router.push('/')
+        router.push(`/spot/${id}`);
         toast({
-          title: "スポットを投稿しました",
+          title: "スポットを更新しました",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -174,7 +137,7 @@ function New() {
       <Center p={5}>
         <Stack w={{ base: "90%", md: "500px" }}>
           <Heading pb={10} color={useColorModeValue("gray.900", "white")}>
-            新しいスポット
+            スポットの編集
           </Heading>
           <Stack spacing={3}>
             <form onSubmit={onSubmit}>
@@ -189,6 +152,7 @@ function New() {
                 <Input
                   id="name"
                   placeholder="なおこロード"
+                  defaultValue={name}
                   {...register("name", {
                     required: "この項目は必須です",
                     maxLength: {
@@ -207,6 +171,7 @@ function New() {
                 <Textarea
                   id="description"
                   placeholder="路面がよくて、長良川と金華山が見える最高のスポットです。"
+                  defaultValue={description}
                   {...register("description", {
                     maxLength: {
                       value: 140,
@@ -224,6 +189,7 @@ function New() {
                 <Select
                   id="prefectures"
                   placeholder="都道府県"
+                  defaultValue={prefectures}
                   {...register("prefectures", {
                     required: "この項目は必須です",
                   })}
@@ -254,7 +220,7 @@ function New() {
                   bg: "purple.400",
                 }}
               >
-                投稿
+                更新
               </Button>
             </form>
           </Stack>
@@ -264,4 +230,4 @@ function New() {
   );
 }
 
-export default New;
+export default SpotEdit;
