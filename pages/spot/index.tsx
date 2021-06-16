@@ -39,10 +39,34 @@ const SpotIndex: React.FC = () => {
     return (
       <Center>
         <Stack p={8} w="lg">
-          <Skeleton height="80px"></Skeleton>
-          <Skeleton height="110px"></Skeleton>
-          <Skeleton height="110px"></Skeleton>
-          <Skeleton height="110px"></Skeleton>
+          <Box height="80px"></Box>
+          <Box borderWidth="1px" rounded={"md"} p={5}>
+            <SkeletonText noOfLines={2}></SkeletonText>
+            <Flex pt={5}>
+              <SkeletonCircle mr={2}></SkeletonCircle>
+              <SkeletonText height="30px" width="100px" noOfLines={2}></SkeletonText>
+              <Spacer />
+              <SkeletonText height="30px" width="100px" noOfLines={1}></SkeletonText>
+            </Flex>
+          </Box>
+          <Box borderWidth="1px" rounded={"md"} p={5}>
+            <SkeletonText noOfLines={2}></SkeletonText>
+            <Flex pt={5}>
+              <SkeletonCircle mr={2}></SkeletonCircle>
+              <SkeletonText height="30px" width="100px" noOfLines={2}></SkeletonText>
+              <Spacer />
+              <SkeletonText height="30px" width="100px" noOfLines={1}></SkeletonText>
+            </Flex>
+          </Box>
+          <Box borderWidth="1px" rounded={"md"} p={5}>
+            <SkeletonText noOfLines={2}></SkeletonText>
+            <Flex pt={5}>
+              <SkeletonCircle mr={2}></SkeletonCircle>
+              <SkeletonText height="30px" width="100px" noOfLines={2}></SkeletonText>
+              <Spacer />
+              <SkeletonText height="30px" width="100px" noOfLines={1}></SkeletonText>
+            </Flex>
+          </Box>
         </Stack>
       </Center>
     );
