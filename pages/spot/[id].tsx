@@ -22,13 +22,18 @@ import {
   SkeletonText,
   Tag,
   Image,
-  Spinner,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
 } from "@chakra-ui/react";
 import firebase from "firebase";
 import { useEffect, useState, useCallback, useContext } from "react";
 import { AuthContext } from "../../src/context/Auth";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Spot } from "../../types/spot";
+import { FaEllipsisV } from "react-icons/fa";
 
 const getImage = (id: number) => {
   return new Promise((resolve) => {
@@ -49,7 +54,6 @@ const getImage = (id: number) => {
   });
 };
 
-
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
 const spotShow: React.FC = () => {
@@ -65,19 +69,19 @@ const spotShow: React.FC = () => {
       getSpotImage(+id);
     }
   }, [id]);
-  
+
   const getSpotImage = useCallback(async (id: number) => {
     getImage(id).then((res) => {
       setImageSrc(res);
     });
   }, []);
-  
+
   if (error) return <div>failed to load</div>;
-  
+
   // ロード中はスケルトンを表示
   if (!spot)
-  return (
-    <Center>
+    return (
+      <Center>
         <Stack p={4} w={{ base: "90%", md: "550px" }}>
           <Skeleton height="60px"></Skeleton>
           <Flex flex="end" align="center">
@@ -94,7 +98,7 @@ const spotShow: React.FC = () => {
         </Stack>
       </Center>
     );
-    
+
   return (
     <div>
       <Center px={3} pt={3}>
@@ -109,25 +113,45 @@ const spotShow: React.FC = () => {
               </Tag>
               {spot.name}
             </Heading>
-            {currentUser?.id === spot.user.id && (
-              <Button
-              onClick={() =>
-                router.push({
-                  pathname: `/spot/edit/${spot.id}`,
-                    query: {
-                      name: spot.name,
-                      prefectures: spot.prefectures,
-                      lat: spot.lat,
-                      lng: spot.lng,
-                      description: spot.description,
-                      userid: spot.user.id
-                    },
-                  })
-                }
-                >
-                編集
-              </Button>
-            )}
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<FaEllipsisV />}
+                variant="link"
+                size="lg"
+              >
+                Menu
+              </MenuButton>
+              <MenuList>
+                {currentUser?.id === spot.user.id && (
+                  <MenuItem
+                    onClick={() =>
+                      router.push({
+                        pathname: `/spot/edit/${spot.id}`,
+                        query: {
+                          name: spot.name,
+                          prefectures: spot.prefectures,
+                          lat: spot.lat,
+                          lng: spot.lng,
+                          description: spot.description,
+                          userid: spot.user.id,
+                        },
+                      })
+                    }
+                  >
+                    編集
+                  </MenuItem>
+                )}
+                {currentUser?.id === spot.user.id && (
+                  <MenuItem onClick={() => alert("まだだよーん")}>
+                    削除
+                  </MenuItem>
+                )}
+                <MenuItem>報告</MenuItem>
+                <MenuItem>非公開リクエスト</MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
           <Flex flex="end" align="center">
             <Spacer />
