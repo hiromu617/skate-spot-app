@@ -34,6 +34,7 @@ import { AuthContext } from "../../src/context/Auth";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Spot } from "../../types/spot";
 import { FaEllipsisV } from "react-icons/fa";
+import ReviewWrap from "../../src/components/ReviewWrap"
 
 const getImage = (id: number) => {
   return new Promise((resolve) => {
@@ -167,6 +168,9 @@ const spotShow: React.FC = () => {
           <Heading size="md">🌏位置情報</Heading>
           <SpotMapShow lat={spot.lat} lng={spot.lng} />
         </Stack>
+      </Center>
+      <Center>
+        <ReviewWrap spot={spot} currentUser={currentUser}/>
       </Center>
     </div>
   );
