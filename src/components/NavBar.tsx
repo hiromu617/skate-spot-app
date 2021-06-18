@@ -7,7 +7,6 @@ import {
   Button,
   Stack,
   Collapse,
-  Link,
   Square,
   useColorModeValue,
   useColorMode,
@@ -16,6 +15,7 @@ import {
   useToast,
   Avatar,
 } from "@chakra-ui/react";
+import Link from 'next/link'
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { AuthContext } from "../context/Auth";
@@ -47,7 +47,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
-          display={{ base: "flex", md: "start" }}
+          display={{ base: "flex"}}
         >
           <IconButton
             onClick={onToggle}
@@ -58,9 +58,10 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex flex={{ base: 1 }} justify={{ base: "center"}}>
           <Heading
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
+            // textAlign={useBreakpointValue({ base: "center", md: "left" })}
+            textAlign={useBreakpointValue({ base: "center"})}
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
             size="md"
@@ -68,13 +69,13 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
             <Link href="/">SpotReview.com</Link>
           </Heading>
 
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          {/* <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
-          </Flex>
+          </Flex> */}
         </Flex>
 
         <Stack
-          flex={{ base: 1, md: 0 }}
+          flex={{ base: 1}}
           justify={"flex-end"}
           direction={"row"}
           spacing={4}

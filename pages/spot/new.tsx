@@ -173,7 +173,7 @@ function New() {
       </Head>
       <Center p={5}>
         <Stack w={{ base: "90%", md: "500px" }}>
-          <Heading pb={10} color={useColorModeValue("gray.900", "white")}>
+          <Heading color={useColorModeValue("gray.900", "white")}>
             新しいスポット
           </Heading>
           <Stack spacing={3}>

@@ -39,7 +39,7 @@ const SpotIndex: React.FC = () => {
     return (
       <Center>
         <Stack p={8} w="lg">
-          <Box height="80px"></Box>
+          <SkeletonText height="30px" width="250px" noOfLines={2}></SkeletonText>
           <Box borderWidth="1px" rounded={"md"} p={5}>
             <SkeletonText noOfLines={2}></SkeletonText>
             <Flex pt={5}>
