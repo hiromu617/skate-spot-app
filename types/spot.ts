@@ -1,4 +1,5 @@
 import { User } from "./user";
+import { Review } from "./review";
 
 export type Spot = {
   name: string;
@@ -9,4 +10,5 @@ export type Spot = {
   prefectures: string;
   created_at: string;
   user: User;
+  reviews: Review[];
 };

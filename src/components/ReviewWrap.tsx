@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormHelperText,
   FormErrorMessage,
+  Divider,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import axios from "../../constants/axios";
@@ -26,6 +27,8 @@ import { useState, useContext } from "react";
 import router from "next/router";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
+import { Review } from "../../types/review";
+import ReviewCard from "./ReviewCard";
 
 type FormData = {
   content: string;
@@ -33,10 +36,11 @@ type FormData = {
 
 type Props = {
   spot: Spot;
+  reviews: Review[];
   currentUser?: User | null;
 };
 
-const ReviewWrap: React.FC<Props> = ({ spot, currentUser }) => {
+const ReviewWrap: React.FC<Props> = ({ spot, currentUser, reviews }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(0);
   const {
@@ -88,15 +92,19 @@ const ReviewWrap: React.FC<Props> = ({ spot, currentUser }) => {
   });
   return (
     <Stack p={4} w={{ base: "95%", md: "650px" }}>
-      <Heading>Review</Heading>
+      <Heading size="lg">レビュー({reviews.length})</Heading>
+      {reviews.map((review: Review) => {
+        return <ReviewCard review={review} />;
+      })}
+      <Divider />
       <Box borderWidth="1px" rounded={"md"} p={5}>
         <Flex pb={5}>
           <Rating
             initialRating={rating}
             onChange={(v) => setRating(v)}
             fractions={2}
-            emptySymbol={<StarIcon boxSize={7} color="gray.100" />}
-            fullSymbol={<StarIcon boxSize={7} color="yellow.300" />}
+            emptySymbol={<StarIcon boxSize={10} color="gray.100" />}
+            fullSymbol={<StarIcon boxSize={10} color="yellow.300" />}
           />
         </Flex>
         <form onSubmit={onSubmit}>

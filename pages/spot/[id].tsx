@@ -170,7 +170,7 @@ const spotShow: React.FC = () => {
         </Stack>
       </Center>
       <Center>
-        <ReviewWrap spot={spot} currentUser={currentUser}/>
+        <ReviewWrap spot={spot} currentUser={currentUser} reviews={spot.reviews}/>
       </Center>
     </div>
   );
