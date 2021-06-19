@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Spot } from "../../types/spot";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { ja } from "date-fns/locale";
+import Rating from "react-rating";
+import { StarIcon } from "@chakra-ui/icons";
 
 type Props = {
   spot: Spot;
@@ -14,12 +16,24 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
   return (
     <Link href="/spot/[id]" as={`/spot/${spot.id}`}>
       <Box borderWidth="1px" rounded={"md"} p={5}>
-        <Heading size="md" mb={5}>
+        <Heading size="md" mb={3}>
           <Tag colorScheme="purple" mr="2">
             {spot.prefectures}
           </Tag>
           {spot.name}
         </Heading>
+        <Flex align="center" mb={3}>
+          <Rating
+            initialRating={spot.score}
+            readonly
+            emptySymbol={<StarIcon boxSize={5} color="gray.100" />}
+            fullSymbol={<StarIcon boxSize={5} color="yellow.300" />}
+          />
+          <Text fontWeight="bold" fontSize="lg">
+            {" "}
+            ({spot.reviews.length})
+          </Text>
+        </Flex>
         <Flex align="center">
           <Avatar size="sm" mr="2" src="" />
           <Text>{spot.user.name}</Text>

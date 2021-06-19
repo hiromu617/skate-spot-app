@@ -5,6 +5,7 @@ export type Spot = {
   name: string;
   id: number;
   description: string;
+  score: number;
   lat: number;
   lng: number;
   prefectures: string;

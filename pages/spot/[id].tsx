@@ -34,7 +34,9 @@ import { AuthContext } from "../../src/context/Auth";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Spot } from "../../types/spot";
 import { FaEllipsisV } from "react-icons/fa";
-import ReviewWrap from "../../src/components/ReviewWrap"
+import ReviewWrap from "../../src/components/ReviewWrap";
+import Rating from "react-rating";
+import { StarIcon } from "@chakra-ui/icons";
 
 const getImage = (id: number) => {
   return new Promise((resolve) => {
@@ -63,7 +65,7 @@ const spotShow: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data: spot, error } = useSWR<Spot>("/api/spots/" + id, fetcher);
-  console.log(spot);
+
   useEffect(() => {
     // imageがnullの時imageを取得
     if (id != undefined) {
@@ -154,6 +156,15 @@ const spotShow: React.FC = () => {
               </MenuList>
             </Menu>
           </Flex>
+          <Flex align="center">
+            <Rating
+              initialRating={spot.score}
+              readonly
+              emptySymbol={<StarIcon boxSize={7} color="gray.100" />}
+              fullSymbol={<StarIcon boxSize={7} color="yellow.300" />}
+            />
+            <Text fontWeight="bold" fontSize="2xl"> ({spot.reviews.length})</Text>
+          </Flex>
           <Flex flex="end" align="center">
             <Spacer />
             <Avatar size="sm" mr="2" src="" />
@@ -170,7 +181,11 @@ const spotShow: React.FC = () => {
         </Stack>
       </Center>
       <Center>
-        <ReviewWrap spot={spot} currentUser={currentUser} reviews={spot.reviews}/>
+        <ReviewWrap
+          spot={spot}
+          currentUser={currentUser}
+          reviews={spot.reviews}
+        />
       </Center>
     </div>
   );
