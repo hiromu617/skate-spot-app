@@ -63,7 +63,7 @@ const spotShow: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data: spot, error } = useSWR<Spot>("/api/spots/" + id, fetcher);
-  // console.log(spot);
+  console.log(spot);
   useEffect(() => {
     // imageがnullの時imageを取得
     if (id != undefined) {

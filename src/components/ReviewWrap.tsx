@@ -46,6 +46,7 @@ const ReviewWrap: React.FC<Props> = ({ spot, currentUser }) => {
   } = useForm<FormData>();
   const toast = useToast();
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true);
     if (!currentUser) {
       toast({
         title: "ログインしてください",
@@ -53,9 +54,37 @@ const ReviewWrap: React.FC<Props> = ({ spot, currentUser }) => {
         duration: 5000,
         isClosable: true,
       });
+      setLoading(false);
       return;
     }
-    alert(`${data.content} ${rating}`);
+    await axios
+      .post("/api/reviews/", {
+        review: {
+          rating: rating,
+          content: data.content,
+          spot_id: spot.id,
+          user_id: currentUser.id,
+        },
+      })
+      .then((res) => {
+        if (res.data.errorMessage != undefined) {
+          setLoading(false);
+          toast({
+            title: res.data.errorMessage,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+          return;
+        }
+        setLoading(false);
+        toast({
+          title: "スポットのレビューを投稿しました",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   });
   return (
     <Stack p={4} w={{ base: "95%", md: "650px" }}>
