@@ -15,7 +15,7 @@ import {
   useToast,
   Avatar,
 } from "@chakra-ui/react";
-import Link from 'next/link'
+import Link from "next/link";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { AuthContext } from "../context/Auth";
@@ -29,10 +29,10 @@ type Props = {
 const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
-  const { currentUser} = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   return (
-    <Box>
+    <Box position={"sticky"} zIndex={"sticky"} top="0">
       <Flex
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
@@ -47,7 +47,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
-          display={{ base: "flex"}}
+          display={{ base: "flex" }}
         >
           <IconButton
             onClick={onToggle}
@@ -58,10 +58,10 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center"}}>
+        <Flex flex={{ base: 1 }} justify={{ base: "center" }}>
           <Heading
             // textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            textAlign={useBreakpointValue({ base: "center"})}
+            textAlign={useBreakpointValue({ base: "center" })}
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
             size="md"
@@ -75,7 +75,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
         </Flex>
 
         <Stack
-          flex={{ base: 1}}
+          flex={{ base: 1 }}
           justify={"flex-end"}
           direction={"row"}
           spacing={4}
@@ -107,14 +107,14 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
                 bg: "purple.400",
               }}
             >
-              Log In
+              LogIn
             </Button>
           )}
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <NavItemWrap />
+        <NavItemWrap onToggle={onToggle} />
       </Collapse>
     </Box>
   );
@@ -129,27 +129,33 @@ const DesktopNav = () => {
   );
 };
 
-const NavItemWrap = () => {
+type NavItemWrapProps = {
+  onToggle: () => void;
+};
+const NavItemWrap: React.FC<NavItemWrapProps> = ({ onToggle }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
-  const { isOpen, onToggle } = useDisclosure();
-  const toast = useToast()
+  const toast = useToast();
 
   const logout = () => {
+    onToggle();
     setCurrentUser(null);
-    firebase.auth().signOut().then(() => {
-      toast({
-        title: "ログアウトしました",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      })
-    })
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        toast({
+          title: "ログアウトしました",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   return (
     <Stack bg={useColorModeValue("white", "gray.800")} p={4}>
       {NAV_ITEMS.map((navItem) => (
-        <NavItem key={navItem.label} {...navItem} />
+        <NavItem key={navItem.label} {...navItem} onToggle={onToggle} />
       ))}
       {currentUser && (
         <Button w={60} onClick={logout}>
@@ -160,9 +166,13 @@ const NavItemWrap = () => {
   );
 };
 
-const NavItem = ({ label, href }: NavItem) => {
-  const { isOpen, onToggle } = useDisclosure();
+type NavItemProps = {
+  onToggle: () => void;
+  label: string;
+  href?: string;
+};
 
+const NavItem: React.FC<NavItemProps> = ({ label, href, onToggle }) => {
   return (
     <Stack
       spacing={4}
@@ -172,6 +182,7 @@ const NavItem = ({ label, href }: NavItem) => {
       <Flex
         py={2}
         as={Link}
+        onClick={onToggle}
         href={href ?? "#"}
         justify={"space-between"}
         align={"center"}
