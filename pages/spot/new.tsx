@@ -13,6 +13,7 @@ import {
   useToast,
   Textarea,
   Select,
+  Switch,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
@@ -38,6 +39,7 @@ type Position = {
 function New() {
   const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [position, setPosition] = useState<Position | null>(null);
   const [myFiles, setMyFiles] = useState<File[]>([]);
   const toast = useToast();
@@ -148,13 +150,14 @@ function New() {
           prefectures: data.prefectures,
           lat: position.lat,
           lng: position.lng,
+          is_anonymous: isAnonymous,
           user_id: currentUser.id,
         },
       })
       .then((res) => {
         handleUpload(res.data.spot.id);
         setLoading(false);
-        router.push('/')
+        router.push("/");
         toast({
           title: "スポットを投稿しました",
           status: "success",
@@ -235,6 +238,15 @@ function New() {
                 <FormErrorMessage>
                   {errors.prefectures && errors.prefectures.message}
                 </FormErrorMessage>
+              </FormControl>
+              <FormControl display="flex" alignItems="center" mb={5}>
+                <FormLabel htmlFor="isAnonymous" mb="0">
+                  匿名投稿にする
+                </FormLabel>
+                <Switch
+                  id="isAnonymous"
+                  onChange={() => setIsAnonymous(!isAnonymous)}
+                />
               </FormControl>
               <FormControl isInvalid={!position} mb={5}>
                 <FormLabel>位置情報</FormLabel>

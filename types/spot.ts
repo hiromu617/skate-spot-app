@@ -12,4 +12,5 @@ export type Spot = {
   created_at: string;
   user: User;
   reviews: Review[];
+  is_anonymous: boolean;
 };

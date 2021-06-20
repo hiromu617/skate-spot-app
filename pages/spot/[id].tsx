@@ -163,12 +163,24 @@ const spotShow: React.FC = () => {
               emptySymbol={<StarIcon boxSize={7} color="gray.100" />}
               fullSymbol={<StarIcon boxSize={7} color="yellow.300" />}
             />
-            <Text fontWeight="bold" fontSize="2xl"> ({spot.reviews.length})</Text>
+            <Text fontWeight="bold" fontSize="2xl">
+              {" "}
+              ({spot.reviews.length})
+            </Text>
           </Flex>
           <Flex flex="end" align="center">
             <Spacer />
-            <Avatar size="sm" mr="2" src="" />
-            <Text>{spot.user.name}</Text>
+            {spot.is_anonymous ? (
+              <Flex align="center">
+                <Avatar size="sm" mr="2" src="" />
+                <Text>匿名</Text>
+              </Flex>
+            ) : (
+              <Flex align="center">
+                <Avatar size="sm" mr="2" src="" />
+                <Text>{spot.user.name}</Text>
+              </Flex>
+            )}
           </Flex>
           <Text>
             📝{format(new Date(spot.created_at), "P p", { locale: ja })}

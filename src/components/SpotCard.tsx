@@ -35,8 +35,17 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
           </Text>
         </Flex>
         <Flex align="center">
-          <Avatar size="sm" mr="2" src="" />
-          <Text>{spot.user.name}</Text>
+          {spot.is_anonymous ? (
+            <Flex align="center">
+              <Avatar size="sm" mr="2" src="" />
+              <Text>匿名</Text>
+            </Flex>
+          ) : (
+            <Flex  align="center">
+              <Avatar size="sm" mr="2" src="" />
+              <Text>{spot.user.name}</Text>
+            </Flex>
+          )}
           <Spacer />
           <Text fontSize="xs">
             {formatDistanceToNow(new Date(spot.created_at), {
