@@ -104,9 +104,6 @@ const spotShow: React.FC = () => {
 
   return (
     <div>
-      <Center px={3} pt={3}>
-        {imageSrc && <Image w={700} src={imageSrc} mb={5} />}
-      </Center>
       <Center>
         <Stack p={4} w={{ base: "95%", md: "650px" }}>
           <Flex justify="space-between" align="center">
@@ -188,7 +185,15 @@ const spotShow: React.FC = () => {
           <Text pt={4} pb={10}>
             {spot.description}
           </Text>
-          <Heading size="md">🌏位置情報</Heading>
+          <Heading size="md" pt={5}>
+            📷スポットの写真
+          </Heading>
+          {imageSrc ? (
+            <Image w={700} src={imageSrc} mb={5} />
+          ) : (
+            <Text>No image</Text>
+          )}
+          <Heading size="md" pt={5}>🌏位置情報</Heading>
           <SpotMapShow lat={spot.lat} lng={spot.lng} />
         </Stack>
       </Center>
