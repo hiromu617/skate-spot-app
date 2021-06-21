@@ -41,10 +41,12 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
               <Text>匿名</Text>
             </Flex>
           ) : (
-            <Flex  align="center">
-              <Avatar size="sm" mr="2" src="" />
-              <Text>{spot.user.name}</Text>
-            </Flex>
+            <Link href="/user/[id]" as={`/user/${spot.user.id}`}>
+              <Flex align="center">
+                <Avatar size="sm" mr="2" src="" />
+                <Text>{spot.user.name}</Text>
+              </Flex>
+            </Link>
           )}
           <Spacer />
           <Text fontSize="xs">

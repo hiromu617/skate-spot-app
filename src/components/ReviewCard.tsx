@@ -1,4 +1,4 @@
-import { Heading, Box, Text, Flex, Spacer } from "@chakra-ui/layout";
+import { Heading, Box, Text, Flex, Spacer,HStack } from "@chakra-ui/layout";
 import { Tag, Button } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/avatar";
 import Link from "next/link";
@@ -25,8 +25,12 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
         {review.content}
       </Heading>
       <Flex align="center">
-        <Avatar size="sm" mr="2" src="" />
-        <Text>{review.user.name}</Text>
+        <Link href="/user/[id]" as={`/user/${review.user.id}`}>
+          <HStack>
+          <Avatar size="sm" mr="2" src="" />
+          <Text>{review.user.name}</Text>
+          </HStack>
+        </Link>
         <Spacer />
         <Text fontSize="xs">
           {formatDistanceToNow(new Date(review.created_at), {

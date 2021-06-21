@@ -89,11 +89,12 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
           </Square>
           {console.log(currentUser)}
           {currentUser?.name ? (
-            <Avatar
-              name={currentUser.name}
-              size="sm"
-              src="https://bit.ly/tioluwani-kolawole"
-            />
+            <Link href="/user/[id]" as={`/user/${currentUser.id}`}>
+              <Avatar
+                size="sm"
+                src="https://bit.ly/tioluwani-kolawole"
+              />
+            </Link>
           ) : (
             <Button
               display={{ base: "inline-flex" }}
