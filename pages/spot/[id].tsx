@@ -27,6 +27,7 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import firebase from "firebase";
 import { useEffect, useState, useCallback, useContext } from "react";
@@ -37,6 +38,7 @@ import { FaEllipsisV } from "react-icons/fa";
 import ReviewWrap from "../../src/components/ReviewWrap";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
+import Link from "next/link";
 
 const getImage = (id: number) => {
   return new Promise((resolve) => {
@@ -65,6 +67,7 @@ const spotShow: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data: spot, error } = useSWR<Spot>("/api/spots/" + id, fetcher);
+  const toast = useToast();
 
   useEffect(() => {
     // imageがnullの時imageを取得
@@ -78,6 +81,20 @@ const spotShow: React.FC = () => {
       setImageSrc(res);
     });
   }, []);
+
+  const deleteSpot = async () => {
+    if (!window.confirm("本当にスポットを削除してもよろしいですか？")) {
+      return;
+    }
+    await axios.delete("/api/spots/" + id);
+    router.push("/spot");
+    toast({
+      title: "スポットを削除しました",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   if (error) return <div>failed to load</div>;
 
@@ -144,9 +161,7 @@ const spotShow: React.FC = () => {
                   </MenuItem>
                 )}
                 {currentUser?.id === spot.user.id && (
-                  <MenuItem onClick={() => alert("まだだよーん")}>
-                    削除
-                  </MenuItem>
+                  <MenuItem onClick={() => deleteSpot()}>削除</MenuItem>
                 )}
                 <MenuItem>報告</MenuItem>
                 <MenuItem>非公開リクエスト</MenuItem>
@@ -173,10 +188,12 @@ const spotShow: React.FC = () => {
                 <Text>匿名</Text>
               </Flex>
             ) : (
-              <Flex align="center">
-                <Avatar size="sm" mr="2" src="" />
-                <Text>{spot.user.name}</Text>
-              </Flex>
+              <Link href="/user/[id]" as={`/user/${spot.user.id}`}>
+                <Flex align="center">
+                  <Avatar size="sm" mr="2" src="" />
+                  <Text>{spot.user.name}</Text>
+                </Flex>
+              </Link>
             )}
           </Flex>
           <Text>
@@ -193,7 +210,9 @@ const spotShow: React.FC = () => {
           ) : (
             <Text>No image</Text>
           )}
-          <Heading size="md" pt={5}>🌏位置情報</Heading>
+          <Heading size="md" pt={5}>
+            🌏位置情報
+          </Heading>
           <SpotMapShow lat={spot.lat} lng={spot.lng} />
         </Stack>
       </Center>
