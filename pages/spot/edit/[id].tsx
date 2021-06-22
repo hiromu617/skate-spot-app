@@ -13,6 +13,8 @@ import {
   useToast,
   Textarea,
   Select,
+  Text,
+  Box,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
@@ -21,9 +23,8 @@ import { useState, useContext, useEffect } from "react";
 import Map from "../../../src/components/Map";
 import { AuthContext } from "../../../src/context/Auth";
 import ImageUpload from "../../../src/components/ImageUpload";
-import firebase from "../../../constants/firebase";
 import { useRouter } from "next/router";
-import { quartersInYear } from "date-fns";
+import { handleUpload } from "../../../src/utils/imageUpload";
 
 type FormData = {
   name: string;
@@ -46,7 +47,55 @@ function SpotEdit() {
   );
   const [myFiles, setMyFiles] = useState<File[]>([]);
   const toast = useToast();
-  const PrefecturesList = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
+  const PrefecturesList = [
+    "北海道",
+    "青森県",
+    "岩手県",
+    "宮城県",
+    "秋田県",
+    "山形県",
+    "福島県",
+    "茨城県",
+    "栃木県",
+    "群馬県",
+    "埼玉県",
+    "千葉県",
+    "東京都",
+    "神奈川県",
+    "新潟県",
+    "富山県",
+    "石川県",
+    "福井県",
+    "山梨県",
+    "長野県",
+    "岐阜県",
+    "静岡県",
+    "愛知県",
+    "三重県",
+    "滋賀県",
+    "京都府",
+    "大阪府",
+    "兵庫県",
+    "奈良県",
+    "和歌山県",
+    "鳥取県",
+    "島根県",
+    "岡山県",
+    "広島県",
+    "山口県",
+    "徳島県",
+    "香川県",
+    "愛媛県",
+    "高知県",
+    "福岡県",
+    "佐賀県",
+    "長崎県",
+    "熊本県",
+    "大分県",
+    "宮崎県",
+    "鹿児島県",
+    "沖縄県",
+  ];
   const {
     handleSubmit,
     register,
@@ -55,34 +104,10 @@ function SpotEdit() {
 
   useEffect(() => {
     // currentUserとspotのuserが一致しなければredirect
-    if(!currentUser || userid == undefined|| currentUser.id != +userid){
-      router.push('/')
+    if (!currentUser || userid == undefined || currentUser.id != +userid) {
+      router.push("/");
     }
-  }, [])
-
-  const handleUpload = async (fileName: string) => {
-    const storage = firebase.storage();
-    try {
-      // アップロード処理
-      const uploadTask: any = storage.ref(`/spots/${fileName}`).put(myFiles[0]);
-
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, next, error);
-    } catch (error) {
-      console.log("エラーキャッチ", error);
-    }
-  };
-
-  const next = (snapshot: { bytesTransferred: number; totalBytes: number }) => {
-    // 進行中のsnapshotを得る
-    // アップロードの進行度を表示
-    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log(percent + "% done");
-    console.log(snapshot);
-  };
-
-  const error = (error: any) => {
-    alert(error);
-  };
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     if (!currentUser) {
@@ -115,7 +140,7 @@ function SpotEdit() {
         },
       })
       .then((res) => {
-        handleUpload(res.data.spot.id);
+        handleUpload(`/spots/${res.data.spot.id}`, myFiles);
         setLoading(false);
         router.push(`/spot/${id}`);
         toast({
@@ -141,7 +166,13 @@ function SpotEdit() {
           </Heading>
           <Stack spacing={3}>
             <form onSubmit={onSubmit}>
-              <ImageUpload myFiles={myFiles} setMyFiles={setMyFiles} />
+              <ImageUpload myFiles={myFiles} setMyFiles={setMyFiles}>
+                <Box borderWidth="1px" rounded={"md"} p={5} mb={5}>
+                  <Text color="gray">
+                    画像をドラッグ&ドロップもしくはここをクリックしてください
+                  </Text>
+                </Box>
+              </ImageUpload>
               {myFiles.length > 0 && (
                 <Button onClick={() => setMyFiles([])} my={5}>
                   削除
