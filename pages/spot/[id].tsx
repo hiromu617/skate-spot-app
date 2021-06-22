@@ -39,25 +39,7 @@ import ReviewWrap from "../../src/components/ReviewWrap";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import Link from "next/link";
-
-const getImage = (id: number) => {
-  return new Promise((resolve) => {
-    var storage = firebase.storage();
-    var storageRef = storage.ref();
-    var spaceRef = storageRef.child(`spots/resized/${id}_200x150`);
-    spaceRef
-      .getDownloadURL()
-      .then(function (url: string) {
-        console.log("ファイルURLを取得");
-        console.log(url);
-        resolve(url);
-      })
-      .catch(function (error) {
-        // Handle any errors
-        console.log(error);
-      });
-  });
-};
+import { getImagePromise } from "../../src/utils/getImagePromise";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
@@ -72,12 +54,12 @@ const spotShow: React.FC = () => {
   useEffect(() => {
     // imageがnullの時imageを取得
     if (id != undefined) {
-      getSpotImage(+id);
+      getSpotImage(`spots/resized/${id}_200x150`);
     }
   }, [id]);
 
-  const getSpotImage = useCallback(async (id: number) => {
-    getImage(id).then((res) => {
+  const getSpotImage = useCallback(async (path: string) => {
+    getImagePromise(path).then((res) => {
       setImageSrc(res);
     });
   }, []);

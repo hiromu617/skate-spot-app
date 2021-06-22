@@ -22,8 +22,8 @@ import { useState, useContext } from "react";
 import Map from "../../src/components/Map";
 import { AuthContext } from "../../src/context/Auth";
 import ImageUpload from "../../src/components/ImageUpload";
-import firebase from "../../constants/firebase";
 import router from "next/router";
+import { handleUpload } from "../../src/utils/imageUpload";
 
 type FormData = {
   name: string;
@@ -98,30 +98,6 @@ function New() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const handleUpload = async (fileName: string) => {
-    const storage = firebase.storage();
-    try {
-      // アップロード処理
-      const uploadTask: any = storage.ref(`/spots/${fileName}`).put(myFiles[0]);
-
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, next, error);
-    } catch (error) {
-      console.log("エラーキャッチ", error);
-    }
-  };
-
-  const next = (snapshot: { bytesTransferred: number; totalBytes: number }) => {
-    // 進行中のsnapshotを得る
-    // アップロードの進行度を表示
-    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log(percent + "% done");
-    console.log(snapshot);
-  };
-
-  const error = (error: any) => {
-    alert(error);
-  };
-
   const onSubmit = handleSubmit(async (data) => {
     if (!currentUser) {
       toast({
@@ -155,7 +131,7 @@ function New() {
         },
       })
       .then((res) => {
-        handleUpload(res.data.spot.id);
+        handleUpload(`/spots/${res.data.spot.id}`, myFiles);
         setLoading(false);
         router.push("/");
         toast({
