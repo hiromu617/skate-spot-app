@@ -7,12 +7,33 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { ja } from "date-fns/locale";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
+import { useEffect, useState, useCallback, useContext } from "react";
+import { getImagePromise } from "../../src/utils/getImagePromise";
+import { ImageCacheContext } from "../../src/context/ImageCache";
 
 type Props = {
   review: Review;
 };
 
 const ReviewCard: React.FC<Props> = ({ review }) => {
+  const { imageCache, setImageCache } = useContext(ImageCacheContext);
+  const [avatarSrc, setAvatarSrc] = useState<any | null>();
+
+  useEffect(() => {
+    if (review.user.id in imageCache) setAvatarSrc(imageCache[review.user.id]);
+    else {
+      getAvatar(`users/resized/${review.user.id}_150x150`);
+    }
+  }, [review.user.id]);
+
+  const getAvatar = useCallback(async (path: string) => {
+    getImagePromise(path).then((res) => {
+      setAvatarSrc(res);
+      if (review.user.id != undefined) {
+        setImageCache({ ...imageCache, [String(review.user.id)]: res });
+      }
+    });
+  }, []);
   return (
     <Box borderWidth="1px" rounded={"md"} p={5}>
       <Rating
@@ -27,7 +48,7 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
       <Flex align="center">
         <Link href="/user/[id]" as={`/user/${review.user.id}`}>
           <HStack>
-          <Avatar size="sm" mr="2" src="" />
+          <Avatar size="sm" mr="2" src={avatarSrc} />
           <Text>{review.user.name}</Text>
           </HStack>
         </Link>

@@ -7,12 +7,34 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { ja } from "date-fns/locale";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
+import { getImagePromise } from "../../src/utils/getImagePromise";
+import { ImageCacheContext } from "../../src/context/ImageCache";
+import { useEffect, useState, useCallback, useContext } from "react";
 
 type Props = {
   spot: Spot;
 };
 
 const SpotCard: React.FC<Props> = ({ spot }) => {
+  const { imageCache, setImageCache } = useContext(ImageCacheContext);
+  const [avatarSrc, setAvatarSrc] = useState<any | null>();
+
+  useEffect(() => {
+    if(spot.user.id in imageCache) setAvatarSrc(imageCache[spot.user.id]) 
+    else {
+      getAvatar(`users/resized/${spot.user.id}_150x150`);
+    }
+  }, [spot.user.id]);
+
+  const getAvatar = useCallback(async (path: string) => {
+    getImagePromise(path).then((res) => {
+      setAvatarSrc(res);
+      if(spot.user.id != undefined){
+        setImageCache({...imageCache, [String(spot.user.id)]: res})
+      }
+    });
+  }, []);
+
   return (
     <Link href="/spot/[id]" as={`/spot/${spot.id}`}>
       <Box borderWidth="1px" rounded={"md"} p={5}>
@@ -43,7 +65,7 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
           ) : (
             <Link href="/user/[id]" as={`/user/${spot.user.id}`}>
               <Flex align="center">
-                <Avatar size="sm" mr="2" src="" />
+                <Avatar size="sm" mr="2" src={avatarSrc} />
                 <Text>{spot.user.name}</Text>
               </Flex>
             </Link>

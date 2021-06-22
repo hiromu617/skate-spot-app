@@ -42,11 +42,13 @@ import ReviewCard from "../../src/components/ReviewCard";
 import ImageUpload from "../../src/components/ImageUpload";
 import { handleUpload } from "../../src/utils/imageUpload";
 import { getImagePromise } from "../../src/utils/getImagePromise";
+import { ImageCacheContext } from "../../src/context/ImageCache";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.user);
 
 const userPage: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
+  const { imageCache, setImageCache } = useContext(ImageCacheContext);
   const [avatarSrc, setAvatarSrc] = useState<any | null>();
   const [avatarFiles, setAvatarFiles] = useState<File[]>([]);
   const router = useRouter();
@@ -57,8 +59,9 @@ const userPage: React.FC = () => {
   const toast = useToast();
 
   useEffect(() => {
-    // imageがnullの時imageを取得
-    if (id != undefined) {
+    //まずキャッシュに画像のurlがあるかチェックする。
+    if (typeof id == "string" && id in imageCache) setAvatarSrc(imageCache[id]);
+    else {
       getAvatar(`users/resized/${id}_150x150`);
     }
   }, [id]);
@@ -66,6 +69,9 @@ const userPage: React.FC = () => {
   const getAvatar = useCallback(async (path: string) => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
+      if (id != undefined) {
+        setImageCache({ ...imageCache, [String(id)]: res });
+      }
     });
   }, []);
 
@@ -75,7 +81,8 @@ const userPage: React.FC = () => {
     if (avatarFiles.length > 0) {
       handleUpload(`/users/${id}`, avatarFiles);
       toast({
-        title: "プロフィール画像を更新しました。更新には時間がかかることがあります。",
+        title:
+          "プロフィール画像を更新しました。更新には時間がかかることがあります。",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -96,7 +103,7 @@ const userPage: React.FC = () => {
       .put("/api/users/" + id, {
         user: {
           name: newUserName,
-        }
+        },
       })
       .then(() => {
         setLoading(false);
@@ -106,7 +113,7 @@ const userPage: React.FC = () => {
           duration: 5000,
           isClosable: true,
         });
-        router.reload()
+        router.reload();
       });
   };
 

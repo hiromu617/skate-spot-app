@@ -93,8 +93,8 @@ const ReviewWrap: React.FC<Props> = ({ spot, currentUser, reviews }) => {
   return (
     <Stack p={4} w={{ base: "95%", md: "650px" }}>
       <Heading size="lg">レビュー({reviews.length})</Heading>
-      {reviews.map((review: Review) => {
-        return <ReviewCard review={review} />;
+      {reviews.map((review: Review, i) => {
+        return <ReviewCard review={review} key={i}/>;
       })}
       <Divider />
       <Box borderWidth="1px" rounded={"md"} p={5}>

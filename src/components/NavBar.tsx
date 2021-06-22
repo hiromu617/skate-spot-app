@@ -19,8 +19,10 @@ import Link from "next/link";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { AuthContext } from "../context/Auth";
-import { useContext } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import firebase from "firebase";
+import { getImagePromise } from "../../src/utils/getImagePromise";
+import { ImageCacheContext } from "../../src/context/ImageCache";
 
 type Props = {
   onOpenLoginModal: () => void;
@@ -30,6 +32,27 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const { currentUser } = useContext(AuthContext);
+  const { imageCache, setImageCache } = useContext(ImageCacheContext);
+  const [avatarSrc, setAvatarSrc] = useState<any | null>();
+
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.id in imageCache)
+        setAvatarSrc(imageCache[currentUser.id]);
+      else {
+        getAvatar(`users/resized/${currentUser.id}_150x150`);
+      }
+    }
+  }, [currentUser]);
+
+  const getAvatar = useCallback(async (path: string) => {
+    getImagePromise(path).then((res) => {
+      setAvatarSrc(res);
+      if (currentUser) {
+        setImageCache({ ...imageCache, [String(currentUser.id)]: res });
+      }
+    });
+  }, []);
 
   return (
     <Box position={"sticky"} zIndex={"sticky"} top="0">
@@ -90,10 +113,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
           {console.log(currentUser)}
           {currentUser?.name ? (
             <Link href="/user/[id]" as={`/user/${currentUser.id}`}>
-              <Avatar
-                size="sm"
-                src="https://bit.ly/tioluwani-kolawole"
-              />
+              <Avatar size="sm" src={avatarSrc} />
             </Link>
           ) : (
             <Button

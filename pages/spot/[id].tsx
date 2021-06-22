@@ -40,6 +40,7 @@ import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { getImagePromise } from "../../src/utils/getImagePromise";
+import { ImageCacheContext } from "../../src/context/ImageCache";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
@@ -50,13 +51,30 @@ const spotShow: React.FC = () => {
   const { id } = router.query;
   const { data: spot, error } = useSWR<Spot>("/api/spots/" + id, fetcher);
   const toast = useToast();
+  const { imageCache, setImageCache } = useContext(ImageCacheContext);
+  const [avatarSrc, setAvatarSrc] = useState<any | null>();
 
   useEffect(() => {
     // imageがnullの時imageを取得
+    if (spot != undefined) {
+      if (spot.user.id in imageCache) setAvatarSrc(imageCache[spot.user.id]);
+      else {
+        getAvatar(`users/resized/${spot.user.id}_150x150`);
+      }
+    }
     if (id != undefined) {
       getSpotImage(`spots/resized/${id}_200x150`);
     }
-  }, [id]);
+  }, [id, spot]);
+
+  const getAvatar = useCallback(async (path: string) => {
+    getImagePromise(path).then((res) => {
+      setAvatarSrc(res);
+      if (spot != undefined) {
+        setImageCache({ ...imageCache, [String(spot.user.id)]: res });
+      }
+    });
+  }, []);
 
   const getSpotImage = useCallback(async (path: string) => {
     getImagePromise(path).then((res) => {
@@ -172,7 +190,7 @@ const spotShow: React.FC = () => {
             ) : (
               <Link href="/user/[id]" as={`/user/${spot.user.id}`}>
                 <Flex align="center">
-                  <Avatar size="sm" mr="2" src="" />
+                  <Avatar size="sm" mr="2" src={avatarSrc} />
                   <Text>{spot.user.name}</Text>
                 </Flex>
               </Link>

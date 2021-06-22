@@ -13,25 +13,28 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AuthProvider } from "../src/context/Auth";
+import { ImageCacheProvider } from "../src/context/ImageCache";
 import AuthModal from "../src/components/AuthModal";
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
-    router.prefetch('/spot/new')
-  }, [])
+    router.prefetch("/spot/new");
+  }, []);
 
   return (
     <ChakraProvider>
-      <AuthProvider>
-        <NavBar onOpenLoginModal={onOpen} />
-        <AuthModal isOpen={isOpen} onClose={onClose}/>
-        <Component {...pageProps} />
-      </AuthProvider>
+      <ImageCacheProvider>
+        <AuthProvider>
+          <NavBar onOpenLoginModal={onOpen} />
+          <AuthModal isOpen={isOpen} onClose={onClose} />
+          <Component {...pageProps} />
+        </AuthProvider>
+      </ImageCacheProvider>
     </ChakraProvider>
   );
 }
