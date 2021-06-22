@@ -63,7 +63,7 @@ const spotShow: React.FC = () => {
       }
     }
     if (id != undefined) {
-      getSpotImage(`spots/resized/${id}_200x150`);
+      getSpotImage(`spots/resized/${id}_400x300`);
     }
   }, [id, spot]);
 
