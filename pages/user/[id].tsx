@@ -27,6 +27,8 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  toast,
+  useToast,
 } from "@chakra-ui/react";
 import firebase from "firebase";
 import { useEffect, useState, useCallback, useContext } from "react";
@@ -37,46 +39,47 @@ import { Review } from "../../types/review";
 import { User } from "../../types/user";
 import SpotCard from "../../src/components/SpotCard";
 import ReviewCard from "../../src/components/ReviewCard";
-
-const getImage = (id: number) => {
-  return new Promise((resolve) => {
-    var storage = firebase.storage();
-    var storageRef = storage.ref();
-    var spaceRef = storageRef.child(`spots/resized/${id}_200x150`);
-    spaceRef
-      .getDownloadURL()
-      .then(function (url: string) {
-        console.log("ファイルURLを取得");
-        console.log(url);
-        resolve(url);
-      })
-      .catch(function (error) {
-        // Handle any errors
-        console.log(error);
-      });
-  });
-};
+import ImageUpload from "../../src/components/ImageUpload";
+import { handleUpload } from "../../src/utils/imageUpload";
+import { getImagePromise } from "../../src/utils/getImagePromise";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.user);
 
 const userPage: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
-  const [imageSrc, setImageSrc] = useState<any | null>();
+  const [avatarSrc, setAvatarSrc] = useState<any | null>();
+  const [avatarFiles, setAvatarFiles] = useState<File[]>([]);
   const router = useRouter();
   const { id } = router.query;
   const { data: user, error } = useSWR<User>("/api/users/" + id, fetcher);
-  // useEffect(() => {
-  //   // imageがnullの時imageを取得
-  //   if (id != undefined) {
-  //     getSpotImage(+id);
-  //   }
-  // }, [id]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const toast = useToast();
 
-  // const getSpotImage = useCallback(async (id: number) => {
-  //   getImage(id).then((res) => {
-  //     setImageSrc(res);
-  //   });
-  // }, []);
+  useEffect(() => {
+    // imageがnullの時imageを取得
+    if (id != undefined) {
+      getAvatar(`users/resized/${id}_150x150`);
+    }
+  }, [id]);
+
+  const getAvatar = useCallback(async (path: string) => {
+    getImagePromise(path).then((res) => {
+      setAvatarSrc(res);
+    });
+  }, []);
+
+  const updateUser = () => {
+    setLoading(true);
+    if (avatarFiles.length > 0) {
+      handleUpload(`/users/${id}`, avatarFiles);
+    }
+    toast({
+      title: "プロフィールを更新しました",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   if (error) return <div>failed to load</div>;
 
@@ -105,12 +108,22 @@ const userPage: React.FC = () => {
     <Center>
       <Stack py={5} spacing={3} w={{ base: "95%", md: "550px" }}>
         <Stack px={3}>
-          <Avatar size={"2xl"} />
+          <Avatar size={"2xl"} src={avatarSrc}/>
           {currentUser != undefined && user.id == currentUser.id ? (
-            <Editable defaultValue={user.name}>
-              <EditablePreview fontSize="3xl" fontWeight="bold" />
-              <EditableInput fontSize="3xl" fontWeight="bold" />
-            </Editable>
+            <>
+              <ImageUpload myFiles={avatarFiles} setMyFiles={setAvatarFiles}>
+                <Text color="gray">change</Text>
+              </ImageUpload>
+              <Editable defaultValue={user.name}>
+                <EditablePreview fontSize="3xl" fontWeight="bold" />
+                <EditableInput fontSize="3xl" fontWeight="bold" />
+              </Editable>
+              {avatarFiles.length > 0 && (
+                <Button onClick={() => updateUser()} isLoading={loading}>
+                  更新
+                </Button>
+              )}
+            </>
           ) : (
             <Heading>{user.name}</Heading>
           )}

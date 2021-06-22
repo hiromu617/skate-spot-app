@@ -14,6 +14,8 @@ import {
   Textarea,
   Select,
   Switch,
+  Box,
+  Text
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Head from "next/head";
@@ -157,7 +159,19 @@ function New() {
           </Heading>
           <Stack spacing={3}>
             <form onSubmit={onSubmit}>
-              <ImageUpload myFiles={myFiles} setMyFiles={setMyFiles} />
+              <FormControl>
+                <FormLabel htmlFor="name">スポットの画像</FormLabel>
+                <FormHelperText mb={3}>
+                  スポットの画像を一枚アップロードすることができます
+                </FormHelperText>
+                <ImageUpload myFiles={myFiles} setMyFiles={setMyFiles}>
+                  <Box borderWidth="1px" rounded={"md"} p={5} mb={5}>
+                    <Text color="gray">
+                      画像をドラッグ&ドロップもしくはここをクリックしてください
+                    </Text>
+                  </Box>
+                </ImageUpload>
+              </FormControl>
               {myFiles.length > 0 && (
                 <Button onClick={() => setMyFiles([])} my={5}>
                   削除
