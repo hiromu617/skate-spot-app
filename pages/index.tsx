@@ -2,20 +2,18 @@ import {
   Heading,
   Stack,
   Center,
-  Box,
-  Text,
-  Flex,
-  Spacer,
 } from "@chakra-ui/layout";
-import { Tag, Button } from "@chakra-ui/react";
+import {
+  Button,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import axios from "../constants/axios";
 import Link from "next/link";
 import { Spot } from "../types/spot";
 import { FiArrowRight } from "react-icons/fi";
-import SpotCard from '../src/components/SpotCard'
+import SpotCard from "../src/components/SpotCard";
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
@@ -42,13 +40,16 @@ const Home: React.FC<Props> = ({ spots }) => {
       </Head>
 
       <main>
+
+            <Alert status="warning">
+              <AlertIcon />
+              このサービスはβ版です。投稿したデータは削除される可能性があります。
+            </Alert>
         <Center>
           <Stack p={8} w="lg">
             <Heading>新着のスポット</Heading>
             {spots.map((spot) => {
-              return (
-              <SpotCard key={spot.id} spot={spot}/>
-              );
+              return <SpotCard key={spot.id} spot={spot} />;
             })}
             <Link href="/spot">
               <Button rightIcon={<FiArrowRight />}>もっと見る</Button>

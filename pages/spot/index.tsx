@@ -3,16 +3,11 @@ import {
   Stack,
   Center,
   Box,
-  Text,
-  Badge,
   Flex,
   Spacer,
 } from "@chakra-ui/layout";
 import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import axios from "../../constants/axios";
-import Link from "next/link";
 import { Spot } from "../../types/spot";
 import SpotCard from "../../src/components/SpotCard";
 import useSWR from "swr";
