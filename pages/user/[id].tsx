@@ -53,6 +53,7 @@ const userPage: React.FC = () => {
   const { id } = router.query;
   const { data: user, error } = useSWR<User>("/api/users/" + id, fetcher);
   const [loading, setLoading] = useState<boolean>(false);
+  const [newUserName, setNewUserName] = useState<string>("");
   const toast = useToast();
 
   useEffect(() => {
@@ -68,17 +69,45 @@ const userPage: React.FC = () => {
     });
   }, []);
 
-  const updateUser = () => {
+  // このメソッドビミョい
+  const updateUser = async () => {
     setLoading(true);
     if (avatarFiles.length > 0) {
       handleUpload(`/users/${id}`, avatarFiles);
+      toast({
+        title: "プロフィール画像を更新しました。更新には時間がかかることがあります。",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     }
-    toast({
-      title: "プロフィールを更新しました",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+    if (newUserName == "") return;
+    if (newUserName.length > 20) {
+      toast({
+        title: "ユーザーネームは20文字以内で入力して下さい",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    await axios
+      .put("/api/users/" + id, {
+        user: {
+          name: newUserName,
+        }
+      })
+      .then(() => {
+        setLoading(false);
+        toast({
+          title: "ユーザーネームを更新しました",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        router.reload()
+      });
   };
 
   if (error) return <div>failed to load</div>;
@@ -108,17 +137,21 @@ const userPage: React.FC = () => {
     <Center>
       <Stack py={5} spacing={3} w={{ base: "95%", md: "550px" }}>
         <Stack px={3}>
-          <Avatar size={"2xl"} src={avatarSrc}/>
+          <Avatar size={"2xl"} src={avatarSrc} />
           {currentUser != undefined && user.id == currentUser.id ? (
             <>
               <ImageUpload myFiles={avatarFiles} setMyFiles={setAvatarFiles}>
                 <Text color="gray">change</Text>
               </ImageUpload>
-              <Editable defaultValue={user.name}>
+              <Editable
+                defaultValue={user.name}
+                onChange={(val) => setNewUserName(val)}
+              >
                 <EditablePreview fontSize="3xl" fontWeight="bold" />
                 <EditableInput fontSize="3xl" fontWeight="bold" />
               </Editable>
-              {avatarFiles.length > 0 && (
+              {(avatarFiles.length > 0 ||
+                (user.name !== newUserName && newUserName != "")) && (
                 <Button onClick={() => updateUser()} isLoading={loading}>
                   更新
                 </Button>
@@ -137,18 +170,18 @@ const userPage: React.FC = () => {
           <TabPanels>
             <TabPanel>
               <Stack>
-                {user.spots.reverse().map((spot: Spot) => {
+                {user.spots.reverse().map((spot: Spot, i) => {
                   if (currentUser == undefined || user.id !== currentUser.id) {
                     if (spot.is_anonymous) return;
                   }
-                  return <SpotCard key={spot.id} spot={spot} />;
+                  return <SpotCard key={i} spot={spot} />;
                 })}
               </Stack>
             </TabPanel>
             <TabPanel>
               <Stack>
-                {user.reviews.map((review: Review) => {
-                  return <ReviewCard review={review} />;
+                {user.reviews.map((review: Review, i) => {
+                  return <ReviewCard review={review} key={i} />;
                 })}
               </Stack>
             </TabPanel>
