@@ -1,9 +1,9 @@
-import { FC, createContext, useEffect, useState } from "react";
+import { FC, createContext, useEffect, useState, SetStateAction } from "react";
 
 const ImageCacheContext = createContext(
   {} as {
     imageCache: HashMap;
-    setImageCache: React.Dispatch<any>;
+    setImageCache: React.Dispatch<SetStateAction<any>>;
   }
 );
 

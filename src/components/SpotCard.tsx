@@ -29,9 +29,7 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
   const getAvatar = useCallback(async (path: string) => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
-      if(spot.user.id != undefined){
         setImageCache({...imageCache, [String(spot.user.id)]: res})
-      }
     });
   }, []);
 
