@@ -1,13 +1,5 @@
-import {
-  Heading,
-  Stack,
-  Center,
-} from "@chakra-ui/layout";
-import {
-  Button,
-  Alert,
-  AlertIcon,
-} from "@chakra-ui/react";
+import { Heading, Stack, Center } from "@chakra-ui/layout";
+import { Button, Alert, AlertIcon } from "@chakra-ui/react";
 import Head from "next/head";
 import axios from "../constants/axios";
 import Link from "next/link";
@@ -40,11 +32,10 @@ const Home: React.FC<Props> = ({ spots }) => {
       </Head>
 
       <main>
-
-            <Alert status="warning">
-              <AlertIcon />
-              このサービスはβ版です。投稿したデータは削除される可能性があります。
-            </Alert>
+        <Alert status="warning">
+          <AlertIcon />
+          このサービスはβ版です。投稿したデータは削除される可能性があります。
+        </Alert>
         <Center>
           <Stack p={8} w="lg">
             <Heading>新着のスポット</Heading>
