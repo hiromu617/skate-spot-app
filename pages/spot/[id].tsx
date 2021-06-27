@@ -46,24 +46,28 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
 const spotShow: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
-  const [imageSrc, setImageSrc] = useState<any | null>();
   const router = useRouter();
   const { id } = router.query;
   const { data: spot, error } = useSWR<Spot>("/api/spots/" + id, fetcher);
   const toast = useToast();
   const { imageCache, setImageCache } = useContext(ImageCacheContext);
   const [avatarSrc, setAvatarSrc] = useState<any | null>();
+  const [spotImageSrc, setSpotImageSrc] = useState<any | null>();
 
   useEffect(() => {
     // imageがnullの時imageを取得
     if (spot != undefined) {
-      if (`user-${spot.user.id}` in imageCache) setAvatarSrc(imageCache[`user-${spot.user.id}`]);
+      if (`user-${spot.user.id}` in imageCache)
+        setAvatarSrc(imageCache[`user-${spot.user.id}`]);
       else {
         getAvatar(`users/resized/${spot.user.id}_150x150`);
       }
     }
     if (id != undefined) {
-      getSpotImage(`spots/resized/${id}_400x300`);
+      if (`spot-${id}` in imageCache) setSpotImageSrc(imageCache[`spot-${id}`]);
+      else {
+        getSpotImage(`spots/resized/${id}_400x300`);
+      }
     }
   }, [id, spot]);
 
@@ -78,7 +82,8 @@ const spotShow: React.FC = () => {
 
   const getSpotImage = useCallback(async (path: string) => {
     getImagePromise(path).then((res) => {
-      setImageSrc(res);
+      setSpotImageSrc(res);
+      setImageCache({ ...imageCache, [`spot-${id}`]: res });
     });
   }, []);
 
@@ -199,16 +204,16 @@ const spotShow: React.FC = () => {
           <Text>
             📝{format(new Date(spot.created_at), "P p", { locale: ja })}
           </Text>
-          <Text pt={4} pb={10}>
+          <Text pt={4} pb={5}>
             {spot.description}
           </Text>
-          <Heading size="md" pt={5}>
+          <Heading size="md">
             📷スポットの写真
           </Heading>
-          {imageSrc ? (
-            <Image w={700} src={imageSrc} mb={5} />
+          {spotImageSrc ? (
+            <Image h={400} src={spotImageSrc} mb={5} fit="cover"/>
           ) : (
-            <Text>No image</Text>
+            <Center h={400} bg={"gray.400"} color="white">No images</Center>
           )}
           <Heading size="md" pt={5}>
             🌏位置情報

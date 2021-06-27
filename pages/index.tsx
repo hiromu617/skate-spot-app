@@ -37,7 +37,7 @@ const Home: React.FC<Props> = ({ spots }) => {
           このサービスはβ版です。投稿したデータは削除される可能性があります。
         </Alert>
         <Center>
-          <Stack px={4} py={8} w="2xl">
+          <Stack p={8} w="2xl">
             <Heading>新着のスポット</Heading>
             <SimpleGrid columns={[1,null,2]} spacing={4}>
               {spots.map((spot) => {

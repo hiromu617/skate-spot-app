@@ -107,7 +107,7 @@ const SpotIndex: React.FC = () => {
 
       <main>
         <Center>
-          <Stack px={4} py={8} w="2xl">
+          <Stack p={8} w="2xl">
             <Heading>スポット一覧</Heading>
             <SimpleGrid columns={[1, null, 2]} spacing={4}>
               {spots.map((spot: Spot) => {
