@@ -1,4 +1,4 @@
-import { Heading, Box, Text, Flex, Spacer,HStack } from "@chakra-ui/layout";
+import { Heading, Box, Text, Flex, Spacer, HStack } from "@chakra-ui/layout";
 import { Tag, Button } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/avatar";
 import Link from "next/link";
@@ -20,7 +20,8 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
   const [avatarSrc, setAvatarSrc] = useState<any | null>();
 
   useEffect(() => {
-    if (`user-${review.user.id}` in imageCache) setAvatarSrc(imageCache[`user-${review.user.id}`]);
+    if (`user-${review.user.id}` in imageCache)
+      setAvatarSrc(imageCache[`user-${review.user.id}`]);
     else {
       getAvatar(`users/resized/${review.user.id}_150x150`);
     }
@@ -36,6 +37,13 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
   }, []);
   return (
     <Box borderWidth="1px" rounded={"md"} p={5}>
+      {typeof review.spot !== "undefined" && (
+        <Link href="/spot/[id]" as={`/spot/${review.spot.id}`} passHref>
+          <Text size="sm" mb={2} color={"gray.500"}>
+            {review.spot.name}のレビュー
+          </Text>
+        </Link>
+      )}
       <Rating
         initialRating={review.rating}
         readonly
@@ -48,8 +56,8 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
       <Flex align="center">
         <Link href="/user/[id]" as={`/user/${review.user.id}`}>
           <HStack>
-          <Avatar size="sm" mr="2" src={avatarSrc} />
-          <Text>{review.user.name}</Text>
+            <Avatar size="sm" mr="2" src={avatarSrc} />
+            <Text>{review.user.name}</Text>
           </HStack>
         </Link>
         <Spacer />
