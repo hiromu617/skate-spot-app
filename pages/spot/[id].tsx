@@ -119,7 +119,7 @@ const spotShow: React.FC = () => {
             <Spacer />
           </Flex>
           <SkeletonText pt={4}></SkeletonText>
-          <Skeleton height="400px"></Skeleton>
+          <Skeleton h={[250, null, 400]}></Skeleton>
         </Stack>
       </Center>
     );
@@ -211,9 +211,9 @@ const spotShow: React.FC = () => {
             📷スポットの写真
           </Heading>
           {spotImageSrc ? (
-            <Image h={400} src={spotImageSrc} mb={5} fit="contain"/>
+            <Image h={[250, null, 400]} src={spotImageSrc} mb={5} fit="contain"/>
           ) : (
-            <Center h={400} bg={"gray.400"} color="white">No images</Center>
+            <Center h={[250, null, 400]} bg={"gray.400"} color="white">No images</Center>
           )}
           <Heading size="md" pt={5}>
             🌏位置情報
