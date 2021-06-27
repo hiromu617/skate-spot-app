@@ -20,7 +20,7 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
   const [avatarSrc, setAvatarSrc] = useState<any | null>();
 
   useEffect(() => {
-    if(spot.user.id in imageCache) setAvatarSrc(imageCache[spot.user.id]) 
+    if(`user-${spot.user.id}` in imageCache) setAvatarSrc(imageCache[`user-${spot.user.id}`]) 
     else {
       getAvatar(`users/resized/${spot.user.id}_150x150`);
     }
@@ -29,7 +29,7 @@ const SpotCard: React.FC<Props> = ({ spot }) => {
   const getAvatar = useCallback(async (path: string) => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
-        setImageCache({...imageCache, [String(spot.user.id)]: res})
+        setImageCache({...imageCache, [`user-${spot.user.id}`]: res})
     });
   }, []);
 

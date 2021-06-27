@@ -37,8 +37,8 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
 
   useEffect(() => {
     if (currentUser) {
-      if (currentUser.id in imageCache)
-        setAvatarSrc(imageCache[currentUser.id]);
+      if (`user-${currentUser.id}` in imageCache)
+        setAvatarSrc(imageCache[`user-${currentUser.id}`]);
       else {
         getAvatar(`users/resized/${currentUser.id}_150x150`);
       }
@@ -49,7 +49,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
       if (currentUser) {
-        setImageCache({ ...imageCache, [String(currentUser.id)]: res });
+        setImageCache({ ...imageCache, [`user-${currentUser.id}`]: res });
       }
     });
   }, []);

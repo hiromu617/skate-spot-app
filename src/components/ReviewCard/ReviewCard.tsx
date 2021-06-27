@@ -20,7 +20,7 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
   const [avatarSrc, setAvatarSrc] = useState<any | null>();
 
   useEffect(() => {
-    if (review.user.id in imageCache) setAvatarSrc(imageCache[review.user.id]);
+    if (`user-${review.user.id}` in imageCache) setAvatarSrc(imageCache[`user-${review.user.id}`]);
     else {
       getAvatar(`users/resized/${review.user.id}_150x150`);
     }
@@ -30,7 +30,7 @@ const ReviewCard: React.FC<Props> = ({ review }) => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
       if (review.user.id != undefined) {
-        setImageCache({ ...imageCache, [String(review.user.id)]: res });
+        setImageCache({ ...imageCache, [`user-${review.user.id}`]: res });
       }
     });
   }, []);

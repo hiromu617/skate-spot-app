@@ -57,7 +57,7 @@ const spotShow: React.FC = () => {
   useEffect(() => {
     // imageがnullの時imageを取得
     if (spot != undefined) {
-      if (spot.user.id in imageCache) setAvatarSrc(imageCache[spot.user.id]);
+      if (`user-${spot.user.id}` in imageCache) setAvatarSrc(imageCache[`user-${spot.user.id}`]);
       else {
         getAvatar(`users/resized/${spot.user.id}_150x150`);
       }
@@ -71,7 +71,7 @@ const spotShow: React.FC = () => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
       if (spot != undefined) {
-        setImageCache({ ...imageCache, [String(spot.user.id)]: res });
+        setImageCache({ ...imageCache, [`user-${spot.user.id}`]: res });
       }
     });
   }, []);

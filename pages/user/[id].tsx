@@ -60,7 +60,7 @@ const userPage: React.FC = () => {
 
   useEffect(() => {
     //まずキャッシュに画像のurlがあるかチェックする。
-    if (typeof id == "string" && id in imageCache) setAvatarSrc(imageCache[id]);
+    if (typeof id == "string" && `user-${id}` in imageCache) setAvatarSrc(imageCache[`user-${id}`]);
     else {
       getAvatar(`users/resized/${id}_150x150`);
     }
@@ -70,7 +70,7 @@ const userPage: React.FC = () => {
     getImagePromise(path).then((res) => {
       setAvatarSrc(res);
       if (id != undefined) {
-        setImageCache({ ...imageCache, [String(id)]: res });
+        setImageCache({ ...imageCache, [`user-${id}`]: res });
       }
     });
   }, []);
