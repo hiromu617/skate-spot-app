@@ -12,7 +12,7 @@ import {
   Spacer,
   Square,
 } from "@chakra-ui/layout";
-import SpotMapShow from "../../src/components/SpotMapShow";
+import SpotMapShow from "../../src/components/SpotMapShow/SpotMapShow";
 import { Avatar } from "@chakra-ui/avatar";
 import format from "date-fns/format";
 import { ja } from "date-fns/locale";
@@ -35,7 +35,7 @@ import { AuthContext } from "../../src/context/Auth";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Spot } from "../../types/spot";
 import { FaEllipsisV } from "react-icons/fa";
-import ReviewWrap from "../../src/components/ReviewWrap";
+import ReviewWrap from "../../src/components/ReviewWrap/ReviewWrap";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import Link from "next/link";

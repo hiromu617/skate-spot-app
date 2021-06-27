@@ -21,9 +21,9 @@ import { useForm } from "react-hook-form";
 import Head from "next/head";
 import axios from "../../constants/axios";
 import { useState, useContext } from "react";
-import Map from "../../src/components/Map";
+import Map from "../../src/components/Map/Map";
 import { AuthContext } from "../../src/context/Auth";
-import ImageUpload from "../../src/components/ImageUpload";
+import ImageUpload from "../../src/components/ImageUpload/ImageUpload";
 import router from "next/router";
 import { handleUpload } from "../../src/utils/imageUpload";
 

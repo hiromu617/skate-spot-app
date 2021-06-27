@@ -11,8 +11,8 @@ import {
   useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
-import firebase from "../../constants/firebase";
-import { AuthContext } from "../context/Auth";
+import firebase from "../../../constants/firebase";
+import { AuthContext } from "../../context/Auth";
 import { FC, useState, useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";

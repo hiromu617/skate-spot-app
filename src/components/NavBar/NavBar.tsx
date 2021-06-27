@@ -18,11 +18,11 @@ import {
 import Link from "next/link";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { AuthContext } from "../context/Auth";
+import { AuthContext } from "../../context/Auth";
 import { useContext, useState, useEffect, useCallback } from "react";
 import firebase from "firebase";
-import { getImagePromise } from "../../src/utils/getImagePromise";
-import { ImageCacheContext } from "../../src/context/ImageCache";
+import { getImagePromise } from "../../utils/getImagePromise";
+import { ImageCacheContext } from "../../context/ImageCache";
 
 type Props = {
   onOpenLoginModal: () => void;

@@ -1,5 +1,5 @@
-import { Spot } from "../../types/spot";
-import { User } from "../../types/user";
+import { Spot } from "../../../types/spot";
+import { User } from "../../../types/user";
 import {
   Heading,
   Stack,
@@ -22,13 +22,13 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import axios from "../../constants/axios";
+import axios from "../../../constants/axios";
 import { useState, useContext } from "react";
 import router from "next/router";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
-import { Review } from "../../types/review";
-import ReviewCard from "./ReviewCard";
+import { Review } from "../../../types/review";
+import ReviewCard from "../ReviewCard/ReviewCard";
 
 type FormData = {
   content: string;

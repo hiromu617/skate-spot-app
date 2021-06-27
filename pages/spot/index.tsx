@@ -9,7 +9,7 @@ import {
 import Head from "next/head";
 import axios from "../../constants/axios";
 import { Spot } from "../../types/spot";
-import SpotCard from "../../src/components/SpotCard";
+import SpotCard from "../../src/components/SpotCard/SpotCard";
 import useSWR from "swr";
 import { useState } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";

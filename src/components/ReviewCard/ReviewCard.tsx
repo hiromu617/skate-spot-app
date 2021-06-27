@@ -2,14 +2,14 @@ import { Heading, Box, Text, Flex, Spacer,HStack } from "@chakra-ui/layout";
 import { Tag, Button } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/avatar";
 import Link from "next/link";
-import { Review } from "../../types/review";
+import { Review } from "../../../types/review";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { ja } from "date-fns/locale";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import { useEffect, useState, useCallback, useContext } from "react";
-import { getImagePromise } from "../../src/utils/getImagePromise";
-import { ImageCacheContext } from "../../src/context/ImageCache";
+import { getImagePromise } from "../../utils/getImagePromise";
+import { ImageCacheContext } from "../../context/ImageCache";
 
 type Props = {
   review: Review;

@@ -5,7 +5,7 @@ import axios from "../constants/axios";
 import Link from "next/link";
 import { Spot } from "../types/spot";
 import { FiArrowRight } from "react-icons/fi";
-import SpotCard from "../src/components/SpotCard";
+import SpotCard from "../src/components/SpotCard/SpotCard";
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/spots/");
