@@ -211,7 +211,7 @@ const spotShow: React.FC = () => {
             📷スポットの写真
           </Heading>
           {spotImageSrc ? (
-            <Image h={400} src={spotImageSrc} mb={5} fit="cover"/>
+            <Image h={400} src={spotImageSrc} mb={5} fit="contain"/>
           ) : (
             <Center h={400} bg={"gray.400"} color="white">No images</Center>
           )}
