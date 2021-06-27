@@ -1,4 +1,4 @@
-import { Heading, Stack, Center } from "@chakra-ui/layout";
+import { Heading, Stack, Center, Flex,SimpleGrid } from "@chakra-ui/layout";
 import { Button, Alert, AlertIcon } from "@chakra-ui/react";
 import Head from "next/head";
 import axios from "../constants/axios";
@@ -37,11 +37,13 @@ const Home: React.FC<Props> = ({ spots }) => {
           このサービスはβ版です。投稿したデータは削除される可能性があります。
         </Alert>
         <Center>
-          <Stack p={8} w="lg">
+          <Stack px={4} py={8} w="2xl">
             <Heading>新着のスポット</Heading>
-            {spots.map((spot) => {
-              return <SpotCard key={spot.id} spot={spot} />;
-            })}
+            <SimpleGrid columns={[1,null,2]} spacing={4}>
+              {spots.map((spot) => {
+                return <SpotCard key={spot.id} spot={spot} />;
+              })}
+            </SimpleGrid>
             <Link href="/spot">
               <Button rightIcon={<FiArrowRight />}>もっと見る</Button>
             </Link>

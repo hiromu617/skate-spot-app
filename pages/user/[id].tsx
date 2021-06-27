@@ -12,6 +12,7 @@ import {
   Spacer,
   Square,
   VStack,
+  SimpleGrid,
 } from "@chakra-ui/layout";
 import { Avatar } from "@chakra-ui/avatar";
 import {
@@ -60,7 +61,8 @@ const userPage: React.FC = () => {
 
   useEffect(() => {
     //まずキャッシュに画像のurlがあるかチェックする。
-    if (typeof id == "string" && `user-${id}` in imageCache) setAvatarSrc(imageCache[`user-${id}`]);
+    if (typeof id == "string" && `user-${id}` in imageCache)
+      setAvatarSrc(imageCache[`user-${id}`]);
     else {
       getAvatar(`users/resized/${id}_150x150`);
     }
@@ -142,7 +144,7 @@ const userPage: React.FC = () => {
 
   return (
     <Center>
-      <Stack py={5} spacing={3} w={{ base: "95%", md: "550px" }}>
+      <Stack py={5} spacing={3} w={{ base: "95%", md: "650px" }}>
         <Stack px={3}>
           <Avatar size={"2xl"} src={avatarSrc} />
           {currentUser != undefined && user.id == currentUser.id ? (
@@ -177,19 +179,26 @@ const userPage: React.FC = () => {
           <TabPanels>
             <TabPanel>
               <Stack>
-                {user.spots.reverse().map((spot: Spot, i) => {
-                  if (currentUser == undefined || user.id !== currentUser.id) {
-                    if (spot.is_anonymous) return;
-                  }
-                  return <SpotCard key={i} spot={spot} />;
-                })}
+                <SimpleGrid columns={[1, null, 2]} spacing={4}>
+                  {user.spots.reverse().map((spot: Spot, i) => {
+                    if (
+                      currentUser == undefined ||
+                      user.id !== currentUser.id
+                    ) {
+                      if (spot.is_anonymous) return;
+                    }
+                    return <SpotCard key={i} spot={spot} />;
+                  })}
+                </SimpleGrid>
               </Stack>
             </TabPanel>
             <TabPanel>
               <Stack>
+              <SimpleGrid columns={[1, null, 2]} spacing={4}>
                 {user.reviews.map((review: Review, i) => {
                   return <ReviewCard review={review} key={i} />;
                 })}
+                </SimpleGrid>
               </Stack>
             </TabPanel>
           </TabPanels>
