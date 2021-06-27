@@ -15,6 +15,7 @@ import {
 import { AuthProvider } from "../src/context/Auth";
 import { ImageCacheProvider } from "../src/context/ImageCache";
 import AuthModal from "../src/components/AuthModal/AuthModal";
+import Footer from "../src/components/Footer/Footer";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -33,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <NavBar onOpenLoginModal={onOpen} />
           <AuthModal isOpen={isOpen} onClose={onClose} />
           <Component {...pageProps} />
+          <Footer/>
         </AuthProvider>
       </ImageCacheProvider>
     </ChakraProvider>

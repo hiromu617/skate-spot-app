@@ -8,6 +8,7 @@ import { Review } from "../types/review";
 import { FiArrowRight } from "react-icons/fi";
 import SpotCard from "../src/components/SpotCard/SpotCard";
 import ReviewCard from "../src/components/ReviewCard/ReviewCard";
+import AcordionQnA from "../src/components/AcordionQnA/AcordionQnA";
 
 export const getServerSideProps = async () => {
   const res = await axios.get("/api/top/");
@@ -67,6 +68,11 @@ const Home: React.FC<Props> = ({ spots, reviews }) => {
                 }
               })}
             </SimpleGrid>
+          </Stack>
+        </Center>
+        <Center>
+          <Stack p={8} w={["2xl", null, null, "6xl"]}>
+            <AcordionQnA/>
           </Stack>
         </Center>
       </main>
