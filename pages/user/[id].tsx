@@ -125,19 +125,30 @@ const userPage: React.FC = () => {
   if (!user)
     return (
       <Center>
-        <Stack p={4} w={{ base: "90%", md: "550px" }}>
-          <Skeleton height="60px"></Skeleton>
-          <Flex flex="end" align="center">
-            <Spacer />
-            <SkeletonCircle></SkeletonCircle>
-            <Skeleton height="30px" width="100px"></Skeleton>
-          </Flex>
-          <Flex flex="end" align="center">
-            <Skeleton height="20px" width="120px"></Skeleton>
-            <Spacer />
-          </Flex>
-          <SkeletonText pt={4}></SkeletonText>
-          <Skeleton height="400px"></Skeleton>
+        <Stack py={5} spacing={3} w={{ base: "95%", md: "650px" }}>
+          <SkeletonCircle w="200px" h="200px"></SkeletonCircle>
+          <SkeletonText w="200px" noOfLines={2}></SkeletonText>
+          <SimpleGrid columns={[1, null, 2]} spacing={4} pt={10}>
+          {[...Array(10)].map(() => {
+              return (
+                <Box borderWidth="1px" rounded={"md"}>
+                  <Skeleton h={200} />
+                  <Box p={5}>
+                    <SkeletonText></SkeletonText>
+                    <Flex pt={5}>
+                      <SkeletonCircle mr={2}></SkeletonCircle>
+                      <SkeletonText
+                        height="30px"
+                        width="100px"
+                        noOfLines={2}
+                      ></SkeletonText>
+                      <Spacer />
+                    </Flex>
+                  </Box>
+                </Box>
+              );
+            })}
+          </SimpleGrid>
         </Stack>
       </Center>
     );
@@ -187,17 +198,17 @@ const userPage: React.FC = () => {
                     ) {
                       if (spot.is_anonymous) return;
                     }
-                    return <SpotCard key={i} spot={spot} />;
+                    return <SpotCard key={spot.id} spot={spot} />;
                   })}
                 </SimpleGrid>
               </Stack>
             </TabPanel>
             <TabPanel>
               <Stack>
-              <SimpleGrid columns={[1, null, 2]} spacing={4}>
-                {user.reviews.map((review: Review, i) => {
-                  return <ReviewCard review={review} key={i} />;
-                })}
+                <SimpleGrid columns={[1, null, 2]} spacing={4}>
+                  {user.reviews.map((review: Review, i) => {
+                    return <ReviewCard review={review} key={i} />;
+                  })}
                 </SimpleGrid>
               </Stack>
             </TabPanel>

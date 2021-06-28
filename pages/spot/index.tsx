@@ -34,64 +34,32 @@ const SpotIndex: React.FC = () => {
   if (!spots)
     return (
       <Center>
-        <Stack p={8} w="lg">
+        <Stack p={8} w="2xl">
           <SkeletonText
             height="30px"
             width="250px"
             noOfLines={2}
           ></SkeletonText>
           <SimpleGrid columns={[1, null, 2]} spacing={4}>
-            <Box borderWidth="1px" rounded={"md"} p={5}>
-              <SkeletonText noOfLines={2}></SkeletonText>
-              <Flex pt={5}>
-                <SkeletonCircle mr={2}></SkeletonCircle>
-                <SkeletonText
-                  height="30px"
-                  width="100px"
-                  noOfLines={2}
-                ></SkeletonText>
-                <Spacer />
-                <SkeletonText
-                  height="30px"
-                  width="100px"
-                  noOfLines={1}
-                ></SkeletonText>
-              </Flex>
-            </Box>
-            <Box borderWidth="1px" rounded={"md"} p={5}>
-              <SkeletonText noOfLines={2}></SkeletonText>
-              <Flex pt={5}>
-                <SkeletonCircle mr={2}></SkeletonCircle>
-                <SkeletonText
-                  height="30px"
-                  width="100px"
-                  noOfLines={2}
-                ></SkeletonText>
-                <Spacer />
-                <SkeletonText
-                  height="30px"
-                  width="100px"
-                  noOfLines={1}
-                ></SkeletonText>
-              </Flex>
-            </Box>
-            <Box borderWidth="1px" rounded={"md"} p={5}>
-              <SkeletonText noOfLines={2}></SkeletonText>
-              <Flex pt={5}>
-                <SkeletonCircle mr={2}></SkeletonCircle>
-                <SkeletonText
-                  height="30px"
-                  width="100px"
-                  noOfLines={2}
-                ></SkeletonText>
-                <Spacer />
-                <SkeletonText
-                  height="30px"
-                  width="100px"
-                  noOfLines={1}
-                ></SkeletonText>
-              </Flex>
-            </Box>
+            {[...Array(10)].map(() => {
+              return (
+                <Box borderWidth="1px" rounded={"md"}>
+                  <Skeleton h={200} />
+                  <Box p={5}>
+                    <SkeletonText></SkeletonText>
+                    <Flex pt={5}>
+                      <SkeletonCircle mr={2}></SkeletonCircle>
+                      <SkeletonText
+                        height="30px"
+                        width="100px"
+                        noOfLines={2}
+                      ></SkeletonText>
+                      <Spacer />
+                    </Flex>
+                  </Box>
+                </Box>
+              );
+            })}
           </SimpleGrid>
         </Stack>
       </Center>
