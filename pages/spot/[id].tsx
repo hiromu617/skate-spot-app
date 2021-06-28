@@ -41,6 +41,7 @@ import { StarIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { getImagePromise } from "../../src/utils/getImagePromise";
 import { ImageCacheContext } from "../../src/context/ImageCache";
+import { FiArrowLeft } from "react-icons/fi";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.spot);
 
@@ -107,7 +108,7 @@ const spotShow: React.FC = () => {
   if (!spot)
     return (
       <Center>
-        <Stack p={4} w={{ base: "90%", md: "550px" }}>
+        <Stack p={4} w={{ base: "95%", md: "650px" }}>
           <Skeleton height="60px"></Skeleton>
           <Flex flex="end" align="center">
             <Spacer />
@@ -207,18 +208,26 @@ const spotShow: React.FC = () => {
           <Text pt={4} pb={5}>
             {spot.description}
           </Text>
-          <Heading size="md">
-            📷スポットの写真
-          </Heading>
+          <Heading size="md">📷スポットの写真</Heading>
           {spotImageSrc ? (
-            <Image h={[250, null, 400]} src={spotImageSrc} mb={5} fit="contain"/>
+            <Image
+              h={[250, null, 400]}
+              src={spotImageSrc}
+              mb={5}
+              fit="contain"
+            />
           ) : (
-            <Center h={[250, null, 400]} bg={"gray.400"} color="white">No images</Center>
+            <Center h={[250, null, 400]} bg={"gray.400"} color="white">
+              No images
+            </Center>
           )}
           <Heading size="md" pt={5}>
             🌏位置情報
           </Heading>
           <SpotMapShow lat={spot.lat} lng={spot.lng} />
+          <Flex mt={10}>
+            <Button leftIcon={<FiArrowLeft />} onClick={() => router.back()}>戻る</Button>
+          </Flex>
         </Stack>
       </Center>
       <Center>

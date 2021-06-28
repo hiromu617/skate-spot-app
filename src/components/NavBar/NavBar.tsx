@@ -101,7 +101,7 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
           flex={{ base: 1 }}
           justify={"flex-end"}
           direction={"row"}
-          spacing={4}
+          spacing={2}
         >
           <Square>
             {colorMode === "light" ? (
@@ -110,13 +110,13 @@ const NavBar: React.FC<Props> = ({ onOpenLoginModal }) => {
               <MoonIcon onClick={toggleColorMode} />
             )}
           </Square>
-          {console.log(currentUser)}
           {currentUser?.name ? (
             <Link href="/user/[id]" as={`/user/${currentUser.id}`}>
               <Avatar size="sm" src={avatarSrc} />
             </Link>
           ) : (
             <Button
+              size={"sm"}
               display={{ base: "inline-flex" }}
               fontSize={"sm"}
               fontWeight={600}
