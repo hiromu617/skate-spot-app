@@ -1,5 +1,5 @@
 import { Heading, Stack, Center, Flex, SimpleGrid } from "@chakra-ui/layout";
-import { Button, Alert, AlertIcon } from "@chakra-ui/react";
+import { Button, Alert, AlertIcon, Box } from "@chakra-ui/react";
 import Head from "next/head";
 import axios from "../constants/axios";
 import Link from "next/link";
@@ -48,7 +48,7 @@ const Home: React.FC<Props> = ({ spots, reviews }) => {
         <Center>
           <Stack p={8} w={["2xl", null, null, "6xl"]}>
             <Heading>新着のスポット</Heading>
-            <SimpleGrid columns={[1, null, 2, 4]} spacing={4}>
+            <SimpleGrid columns={[1, null, 2]} spacing={8}>
               {spots.map((spot) => {
                 return <SpotCard key={spot.id} spot={spot} />;
               })}
@@ -58,10 +58,20 @@ const Home: React.FC<Props> = ({ spots, reviews }) => {
             </Link>
           </Stack>
         </Center>
+        <Center my={4}>
+          <Box p={10} borderWidth="1px" rounded={"md"}>
+            <Stack>
+              <Heading mb={4} size="lg">🌏地図からスポットを探す</Heading>
+              <Link href="/spot/map">
+                <Button rightIcon={<FiArrowRight />}>探す</Button>
+              </Link>
+            </Stack>
+          </Box>
+        </Center>
         <Center>
           <Stack p={8} w={["2xl", null, null, "6xl"]}>
             <Heading>新着のレビュー</Heading>
-            <SimpleGrid columns={[1, null, 2, 4]} spacing={4}>
+            <SimpleGrid columns={[1, null, 2]} spacing={4}>
               {reviews.map((review) => {
                 if (typeof review.spot !== "undefined") {
                   return <ReviewCard key={review.id} review={review} />;
@@ -72,7 +82,7 @@ const Home: React.FC<Props> = ({ spots, reviews }) => {
         </Center>
         <Center>
           <Stack p={8} w={["2xl", null, null, "6xl"]}>
-            <AcordionQnA/>
+            <AcordionQnA />
           </Stack>
         </Center>
       </main>
