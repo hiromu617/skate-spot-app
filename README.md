@@ -37,6 +37,8 @@ API ⏩ [skate-spo-api](https://github.com/hiromu617/skate-spot-api)
 - React.js 17.0.2
 - Next.js 10.2.3
 - TypeScript 4.3.2
+- Vercel
+
 ## library and framewoek
 
 - UIフレームワーク ⏩ [chakra ui](https://chakra-ui.com/)
